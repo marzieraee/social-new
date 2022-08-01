@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-ysels=g_*p@a)l4lffldup1*a(@mv0irf5nzkt3r4bjfjzu(1o
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['social-new.herokuapp.com','127.0.0.1']
+ALLOWED_HOSTS = ['social-new2.herokuapp.com','127.0.0.1']
 
 
 # Application definition
