@@ -58,7 +58,6 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'mysite.urls'
-CORS_ALLOW_ALL_ORIGINS: True
 
 TEMPLATES = [
     {
@@ -108,7 +107,10 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
+CORS_ALLOWED_ORIGINS = [
+    'https://social-new2.herokuapp.com',
+    "http://127.0.0.1:8000",
+]
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
