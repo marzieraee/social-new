@@ -109,8 +109,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 CORS_ALLOWED_ORIGINS = [
     'https://social-new2.herokuapp.com',
-    "http://127.0.0.1:8000",
-    "http://127.0.0.1:3001",
+    'http://localhost:8000',
+    'http://localhost:3001',
 ]
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
