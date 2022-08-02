@@ -155,6 +155,7 @@ MEDIA_URL = '/media/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 SIMPLE_JWT = {
+
 'AUTH_COOKIE': 'access_token',  # Cookie name. Enables cookies if value is set.
 'AUTH_COOKIE_DOMAIN': None,     # A string like "example.com", or None for standard domain cookie.
 'AUTH_COOKIE_SECURE': False,    # Whether the auth cookies should be secure (https:// only).
