@@ -6,7 +6,9 @@ from django.conf.urls.static import static
 
 
 urlpatterns = [
-         path('', views.PostList.as_view(), name='postlistapi'),
+        path('token/', views.CookieTokenObtainPairView.as_view(), name='token_obtain_pair'),
+        path('token/refresh/',views.CookieTokenRefreshView.as_view(), name='token_refresh'),
+        path('', views.PostList.as_view(), name='postlistapi'),
         path('register/', views.SignUp.as_view(), name='register'),
         path('profile/<str:username>', views.Profile.as_view(), name='profile'),
         path('editprofile/<str:username>', views.EditProfile.as_view(), name='profile'),
