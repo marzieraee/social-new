@@ -17,10 +17,11 @@ urlpatterns = [
         path('postcreate/', views.CreatPost.as_view(), name='postcomment'),
         path('postsingle/<int:pk>', views.SinglePost.as_view(), name='postsingle'),
         path('setprofile/<str:username>', views.SetImageProfile.as_view(), name='changepass'),
-        
+        path('createcomment/<int:pk>', views.CreateComment.as_view(), name='createcomment'),
+
         
 #     path('postcreate/', views.PostComment.as_view(), name='postcomment'),
-#     # path('commentretrieve/<int:pk>', views.CommentRetriveApi.as_view(), name='commentretriveapi'),
+    # path('commentretrieve/<int:pk>', views.CommentRetriveApi.as_view(), name='commentretriveapi'),
 #     path('register/', views.SignUp.as_view(), name='register'),
 #     path('profile/<int:pk>', views.Profile.as_view(), name='profile'),
 #     path('changepassword/<int:pk>', views.ChangePass.as_view(), name='changepass'),

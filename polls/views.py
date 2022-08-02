@@ -122,3 +122,13 @@ class SetImageProfile(UpdateAPIView):
         return qs.filter(user=self.request.user)
     
     
+class CreateComment(CreateAPIView):
+    serializer_class = CommentCreatSerializer
+    permission_classes=(IsAuthenticated,)
+
+    def get_queryset(self):
+        queryset = Comment.objects.filter(post_id=self.kwargs['pk'])
+        return queryset
+    def perform_create(self,serializer):
+        serializer.save(commenter=self.request.user,post_id=self.kwargs['pk'])
+    

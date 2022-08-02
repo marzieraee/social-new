@@ -164,4 +164,21 @@ class PostUpdateSerializer(serializers.ModelSerializer):
         
         fields=('title','contet',)
 
+ 
         
+class CommentListSerializer(serializers.ModelSerializer):
+    commenter=UserProfileSerializer()
+    class Meta:
+        
+        model=Comment
+        
+        fields=('post','body','commenter',)
+        
+        
+class CommentCreatSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+         
+        model=Comment
+        
+        fields=('body',)

@@ -37,3 +37,10 @@ class MyPost(models.Model):
 class MediaPic(models.Model):
     image=models.ImageField(null=True,blank=True,default='',upload_to='posts/') 
     post=models.ForeignKey(MyPost,related_name='pic',on_delete=models.CASCADE)
+    
+    
+class Comment(models.Model):
+    post=models.ForeignKey(MyPost,on_delete=models.CASCADE,related_name='posts',default=1)
+    commenter = models.ForeignKey(User,on_delete=models.CASCADE,related_name='comments',null=True)
+    body = models.TextField()
+    created_on = models.DateTimeField(auto_now_add=True)
