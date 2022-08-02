@@ -122,18 +122,32 @@ class ChangePasswordSerializer(serializers.ModelSerializer):
     
     
     
+class CommentListSerializer(serializers.ModelSerializer):
+    commenter=UserProfileSerializer()
+    class Meta:
+        
+        model=Comment
+        
+        fields=('body','commenter',)   
+         
+class CommentCreatSerializer(serializers.ModelSerializer):
     
-    
+    class Meta:
+         
+        model=Comment
+        
+        fields=('body',)    
+
     
 class PostListSerializer(serializers.ModelSerializer):
     author=UserProfileSerializer()
+    posts=CommentListSerializer(many=True)
     class Meta:
         
         model= MyPost
         
-        fields=('title','contet','likes','author',)
-        
-        
+        fields=('title','contet','likes','author','posts')
+                
         
         
 class MediaPicSerializer(serializers.ModelSerializer):
@@ -166,19 +180,7 @@ class PostUpdateSerializer(serializers.ModelSerializer):
 
  
         
-class CommentListSerializer(serializers.ModelSerializer):
-    commenter=UserProfileSerializer()
-    class Meta:
-        
-        model=Comment
-        
-        fields=('post','body','commenter',)
+
         
         
-class CommentCreatSerializer(serializers.ModelSerializer):
-    
-    class Meta:
-         
-        model=Comment
-        
-        fields=('body',)
+

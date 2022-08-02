@@ -132,3 +132,11 @@ class CreateComment(CreateAPIView):
     def perform_create(self,serializer):
         serializer.save(commenter=self.request.user,post_id=self.kwargs['pk'])
     
+# class ShowComment(ListAPIView):
+#     serializer_class = CommentListSerializer
+#     permission_classes=(IsAuthenticated,)
+
+#     def get_queryset(self,*args, **kwargs):
+        
+#         queryset = Comment.objects.filter(post_id=self.kwargs['pk'])
+#         return queryset
