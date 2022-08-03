@@ -57,7 +57,7 @@ class LoginView(APIView):
             else:
                 return Response({"No active" : "This account is not active!!"}, status=status.HTTP_404_NOT_FOUND)
         else:
-            return Response({"Invalid" : "Invalid username or password!!"}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"Invalid" : "Invalid username or password!!"}, status=401)
 
 
 
