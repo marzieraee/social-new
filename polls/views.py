@@ -1,3 +1,4 @@
+from os import access
 from django.shortcuts import render
 
 
@@ -23,6 +24,9 @@ from rest_framework.response import Response
 from django.contrib.auth import authenticate
 from django.conf import settings
 from rest_framework import status
+from rest_framework_simplejwt.views import TokenRefreshView, TokenObtainPairView
+from rest_framework_simplejwt.serializers import TokenRefreshSerializer
+from rest_framework_simplejwt.exceptions import InvalidToken
 
 
 
@@ -33,45 +37,32 @@ def get_tokens_for_user(user):
         'access': str(refresh.access_token),
     }
 
-class LoginView(APIView):
-    def post(self, request, format=None):
-        data = request.data
-        response = Response()        
-        username = data.get('username', None)
-        password = data.get('password', None)
-        user = authenticate(username=username, password=password)
-        if user is not None:
-            if user.is_active:
-                data = get_tokens_for_user(user)
-                response.set_cookie(
-                    key = settings.SIMPLE_JWT['AUTH_COOKIE'], 
-                    value = data['refresh'],
-                    expires = settings.SIMPLE_JWT['SLIDING_TOKEN_REFRESH_LIFETIME'],
-                    secure = settings.SIMPLE_JWT['AUTH_COOKIE_SECURE'],
-                    httponly = settings.SIMPLE_JWT['AUTH_COOKIE_HTTP_ONLY'],
-                    samesite = settings.SIMPLE_JWT['AUTH_COOKIE_SAMESITE']
-                )
-                csrf.get_token(request)
-                response.data = {"Success" : "Login successfully","data":data}
-                return response
-            else:
-                return Response({"No active" : "This account is not active!!"}, status=status.HTTP_404_NOT_FOUND)
+
+class CookieTokenRefreshSerializer(TokenRefreshSerializer):
+    refresh = None
+    def validate(self, attrs):
+        attrs['refresh'] = self.context['request'].COOKIES.get('refresh_token')
+        if attrs['refresh']:
+            return super().validate(attrs)
         else:
-            return Response({"Invalid" : "Invalid username or password!!"}, status=401)
+            raise InvalidToken('No valid token found in cookie \'refresh_token\'')
 
+class CookieTokenObtainPairView(TokenObtainPairView):
+  def finalize_response(self, request, response, *args, **kwargs):
+    if response.data.get('refresh'):
+        cookie_max_age = 3600 * 24 * 14 # 14 days
+        response.set_cookie('refresh_token', response.data['refresh'], max_age=cookie_max_age, httponly=True )
+        del response.data['refresh']
+    return super().finalize_response(request, response, *args, **kwargs)
 
-
-
-
-
-
-
-
-
-
-
-
-
+class CookieTokenRefreshView(TokenRefreshView):
+    def finalize_response(self, request, response, *args, **kwargs):
+        if response.data.get('refresh'):
+            cookie_max_age = 3600 * 24 * 14 # 14 days
+            response.set_cookie('refresh_token', response.data['refresh'], max_age=cookie_max_age, httponly=True )
+            del response.data['refresh']
+        return super().finalize_response(request, response, *args, **kwargs)
+    serializer_class = CookieTokenRefreshSerializer
 
 
 class UserIsOwnerOrReadOnly(permissions.BasePermission):
