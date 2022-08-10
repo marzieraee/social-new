@@ -11,12 +11,7 @@ from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
 
 
-class MediaSerialzer(serializers.ModelSerializer):
-    
 
-    class Meta:
-            model = MediaPeofile
-            fields = ('image',)
 
 class RegisterSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(
@@ -69,12 +64,11 @@ class UserEditSerializer(serializers.ModelSerializer):
             
                 
 class UserProfileSerializer(serializers.ModelSerializer):
-    media=MediaSerialzer()
     class Meta:
     
         model=User
         
-        fields=('username','email','media')
+        fields=('username','email','date_joined','last_login',)
         
         
             
@@ -121,7 +115,17 @@ class ChangePasswordSerializer(serializers.ModelSerializer):
     
     
     
+
+class MediaSerialzer(serializers.ModelSerializer):
     
+    user=UserProfileSerializer()
+    class Meta:
+            model = MediaPeofile
+            fields = ('image','user',)
+            
+            
+            
+            
 class CommentListSerializer(serializers.ModelSerializer):
     commenter=UserProfileSerializer()
     class Meta:
@@ -146,7 +150,7 @@ class PostListSerializer(serializers.ModelSerializer):
         
         model= MyPost
         
-        fields=('title','contet','likes','author','posts')
+        fields=('title','contet','likes','author','posts','image',)
                 
         
         

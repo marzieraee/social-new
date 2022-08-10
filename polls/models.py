@@ -14,15 +14,15 @@ class MyUser(models.Model):
     
 
 class MediaPeofile(models.Model):
-    image=models.ImageField(null=True,blank=True,default='/profile/SetImageProfile',upload_to='profile/') 
     user=models.ForeignKey(User,related_name='media',on_delete=models.CASCADE)
+    image=models.ImageField(default='profile/x22.png',upload_to='profile/') 
     
     
 class MyPost(models.Model):
     author=models.ForeignKey(User,on_delete=models.CASCADE,null=True,related_name='related_name')
     user_likes = models.ManyToManyField(User,related_name='userlike',blank=True)
     title=models.CharField(max_length=200)
-    image = models.ImageField(upload_to='',default='', blank=True, null=True)
+    image = models.ImageField(default='posts/x22.png',upload_to='posts/')
     contet=models.TextField(null=True)
     likes = models.PositiveIntegerField(default=0) 
     created_date=models.DateTimeField(auto_now_add=True)

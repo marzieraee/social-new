@@ -1,28 +1,17 @@
-from os import access
-from django.shortcuts import render
 
 
-from urllib import request
-from django.shortcuts import get_object_or_404
 
 from .models import *
 # Create your views here.
-from rest_framework.views import APIView
-from rest_framework.response import Response
 from .serializers import *
 from rest_framework.permissions import IsAuthenticated,AllowAny
-from rest_framework.authentication import SessionAuthentication
-from rest_framework_simplejwt.authentication import JWTAuthentication
+
 from rest_framework import generics
 from rest_framework.generics import RetrieveAPIView,UpdateAPIView,CreateAPIView,RetrieveUpdateAPIView,ListAPIView,ListCreateAPIView,RetrieveUpdateDestroyAPIView
 # from .paginations import * 
 from rest_framework import status,permissions
 from rest_framework_simplejwt.tokens import RefreshToken
-from django.middleware import csrf
-from rest_framework.views import APIView
 from rest_framework.response import Response
-from django.contrib.auth import authenticate
-from django.conf import settings
 from rest_framework import status
 from rest_framework_simplejwt.views import TokenRefreshView, TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenRefreshSerializer
@@ -87,8 +76,12 @@ class Profile(RetrieveAPIView):
     serializer_class = UserProfileSerializer
     queryset = User.objects.all()
     lookup_field = 'username'
-    permission_classes=(IsAuthenticated,)
 
+
+class ShowPic(RetrieveAPIView):
+    serializer_class = MediaSerialzer
+    queryset = MediaPeofile.objects.all()
+    lookup_field = 'user__username'
    
     
 class EditProfile(RetrieveUpdateAPIView) :
@@ -99,7 +92,7 @@ class EditProfile(RetrieveUpdateAPIView) :
     
     permission_classes=(IsAuthenticated,UserIsOwnerOrReadOnly)
     
-    
+
           
         
         
@@ -143,7 +136,7 @@ class SinglePost(RetrieveAPIView):
 
 
 class EditPost(UpdateAPIView):
-    permission_classes=(IsAuthenticated,)
+    permission_classes=(IsAuthenticated,UserIsOwnerOrReadOnly)
     queryset = MyPost.objects.all()
     serializer_class = PostUpdateSerializer
     
@@ -155,10 +148,9 @@ class EditPost(UpdateAPIView):
     
 class SetImageProfile(UpdateAPIView):
     
-    permission_classes=(IsAuthenticated,)
+    permission_classes=(IsAuthenticated,UserIsOwnerOrReadOnly)
     queryset = MediaPeofile.objects.all()
     serializer_class = MediaSerialzer
-    lookup_field = 'username'
     def get_queryset(self):
         
         qs=super().get_queryset()
