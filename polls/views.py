@@ -73,12 +73,12 @@ class SignUp(CreateAPIView):
     
 
 
-class Profile(RetrieveAPIView):
-    serializer_class = UserProfileSerializer
-    queryset = User.objects.all()
-    lookup_field = 'username'
+# class Profile(RetrieveAPIView):
+#     serializer_class = UserProfileSerializer
+#     queryset = User.objects.all()
+#     lookup_field = 'username'
 
-
+# 'use for profile'
 class ShowPic(RetrieveAPIView):
     serializer_class = MediaSerialzer
     queryset = MediaPeofile.objects.all()
