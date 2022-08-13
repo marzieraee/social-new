@@ -32,6 +32,7 @@ class CookieTokenRefreshSerializer(TokenRefreshSerializer):
     def validate(self, attrs):
         attrs['refresh'] = self.context['request'].COOKIES.get('refresh_token')
         if attrs['refresh']:
+            print(attrs['refresh'])
             return super().validate(attrs)
         else:
             raise InvalidToken('No valid token found in cookie \'refresh_token\'')
@@ -175,3 +176,4 @@ class CreateComment(CreateAPIView):
         
 #         queryset = Comment.objects.filter(post_id=self.kwargs['pk'])
 #         return queryset
+
