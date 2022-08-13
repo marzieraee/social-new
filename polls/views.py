@@ -87,7 +87,6 @@ class ShowPic(RetrieveAPIView):
     
 class EditProfile(RetrieveUpdateAPIView) :
     queryset = User.objects.all()
-    lookup_field = 'username'
 
     serializer_class = UserEditSerializer
     
