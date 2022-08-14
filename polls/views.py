@@ -1,6 +1,4 @@
 
-
-
 from .models import *
 # Create your views here.
 from .serializers import *
@@ -79,11 +77,12 @@ class SignUp(CreateAPIView):
 #     lookup_field = 'username'
 
 # 'use for profile'
-class ShowPic(RetrieveAPIView):
+class Profile(RetrieveAPIView):
     serializer_class = MediaSerialzer
     queryset = MediaPeofile.objects.all()
     lookup_field = 'user__username'
-   
+    
+    
     
 class EditProfile(RetrieveUpdateAPIView) :
     queryset = User.objects.all()
@@ -91,8 +90,9 @@ class EditProfile(RetrieveUpdateAPIView) :
     serializer_class = UserEditSerializer
     
     permission_classes=(IsAuthenticated,UserIsOwnerOrReadOnly)
+        
+        
     
-
           
         
         
@@ -136,7 +136,7 @@ class SinglePost(RetrieveAPIView):
 
 
 class EditPost(UpdateAPIView):
-    permission_classes=(IsAuthenticated,UserIsOwnerOrReadOnly)
+    permission_classes=(IsAuthenticated)
     queryset = MyPost.objects.all()
     serializer_class = PostUpdateSerializer
     
@@ -176,3 +176,12 @@ class CreateComment(CreateAPIView):
 #         queryset = Comment.objects.filter(post_id=self.kwargs['pk'])
 #         return queryset
 
+class MyProfile(RetrieveUpdateAPIView):
+    
+    permission_classes=(IsAuthenticated,UserIsOwnerOrReadOnly)
+    queryset = User.objects.all()
+    serializer_class = UserProfileSerializer
+    def get_queryset(self):
+        
+        qs=super().get_queryset()
+        return qs.filter(username=self.request.user)

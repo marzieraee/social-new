@@ -14,7 +14,7 @@ class MyUser(models.Model):
     
 
 class MediaPeofile(models.Model):
-    user=models.ForeignKey(User,related_name='media',on_delete=models.CASCADE)
+    user=models.OneToOneField(User,related_name='media',on_delete=models.CASCADE)
     image=models.ImageField(default='profile/x22.png',upload_to='profile/') 
     
     

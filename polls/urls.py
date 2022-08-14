@@ -9,17 +9,18 @@ urlpatterns = [
         
          path('', views.PostList.as_view(), name='postlistapi'),
         path('register/', views.SignUp.as_view(), name='register'),
-        path('profile/<str:user__username>', views.ShowPic.as_view(), name='profile'),
+        path('profile/<str:user__username>', views.Profile.as_view(), name='profile'),
         path('editprofile/<int:pk>', views.EditProfile.as_view(), name='profile'),
         path('editpost/<int:pk>', views.EditPost.as_view(), name='postsingle'),
         path('token/',views.CookieTokenObtainPairView.as_view(), name='token_obtain_pair'),
         path('token/refresh/',views.CookieTokenRefreshView.as_view(), name='token_refresh'),
-        path('picpro/<str:user__username>', views.ShowPic.as_view(), name='profile'),
+        # path('picpro/<str:user__username>', views.ShowPic.as_view(), name='profile'),
         path('changepassword/<str:username>', views.ChangePass.as_view(), name='changepass'),
         path('postcreate/', views.CreatPost.as_view(), name='postcomment'),
         path('postsingle/<int:pk>', views.SinglePost.as_view(), name='postsingle'),
-        path('setprofile/<str:username>', views.SetImageProfile.as_view(), name='changepass'),
+        path('setprofile/<int:pk>', views.SetImageProfile.as_view(), name='changepass'),
         path('createcomment/<int:pk>', views.CreateComment.as_view(), name='createcomment'),
+        path('myprofile/<int:pk>', views.MyProfile.as_view(), name='changepass'),
 
         
 #     path('postcreate/', views.PostComment.as_view(), name='postcomment'),
@@ -34,4 +35,4 @@ urlpatterns = [
     
     
     
-]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
