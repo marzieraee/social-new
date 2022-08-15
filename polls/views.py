@@ -192,6 +192,6 @@ class CookielogoutView(TokenRefreshView):
     def response(self, request, response, *args, **kwargs):
         if response.data.get('refresh'):
             cookie_max_age = 3600 * 24 * 14 # 14 days
-            response.delete_cookie('refresh_token')
+            response.delete_cookie('refresh')
         return response
     serializer_class = CookieTokenRefreshSerializer
