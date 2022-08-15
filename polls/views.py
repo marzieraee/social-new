@@ -155,10 +155,10 @@ class EditPost(UpdateAPIView):
     
 class SetImageProfile(RetrieveUpdateAPIView):
     
-    permission_classes=(IsAuthenticated,UserIsOwnerimageOrReadOnly)
+    permission_classes=(IsAuthenticated,)
     queryset = MediaPeofile.objects.all()
     serializer_class = MediaproSerialzer
-    lookup_field='id'
+    lookup_field='user_id'
     def get_queryset(self):
         
         return self.queryset.filter(user=self.request.user)
