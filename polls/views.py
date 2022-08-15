@@ -189,9 +189,8 @@ class MyProfile(RetrieveUpdateAPIView):
     
 
 class CookielogoutView(APIView):
-    def response(self, request, response, *args, **kwargs):
+    def post(self, response, *args, **kwargs):
         if response.data.get('refresh'):
-            cookie_max_age = 3600 * 24 * 14 # 14 days
             response.delete_cookie('refresh')
             response.save()
         return response
