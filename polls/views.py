@@ -1,3 +1,5 @@
+from asyncio import exceptions
+from urllib import response
 from .models import *
 # Create your views here.
 from .serializers import *
@@ -184,3 +186,14 @@ class MyProfile(RetrieveUpdateAPIView):
         
         qs=super().get_queryset()
         return qs.filter(username=self.request.user)
+    
+
+class LogoutApi(generics.GenericAPIView):
+    permission_classes=(IsAuthenticated,)
+    serializer_class=LogoutSerializer
+    
+    def post(self,request):
+        serializer=self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return response(status=status.HTTP_204_NO_CONTENT)

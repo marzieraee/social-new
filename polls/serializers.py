@@ -1,9 +1,12 @@
+from ast import Expression
+from asyncio import exceptions
 import email
 from email.mime import image
+from lib2to3.pgen2.tokenize import TokenError
 from urllib import request
 from django.forms import CharField
 from rest_framework import serializers
-
+from rest_framework_simplejwt.tokens import RefreshToken
 from .models import *
 
 
@@ -200,7 +203,23 @@ class PostUpdateSerializer(serializers.ModelSerializer):
 
  
         
-
+        
+class LogoutSerializer(serializers.Serializer):
+    refresh=serializers.CharField()
+    
+    
+    def validate(self, attrs):
+        self.token=attrs['refresh']
+        
+        return attrs
+    
+    def save(self, **kwargs):
+        
+        try:
+            RefreshToken(self.token).blacklist()
+        
+        except TokenError:
+            self.fail('bad token')
         
         
 
