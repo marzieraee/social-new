@@ -21,6 +21,11 @@ class MediaSerialzer(serializers.ModelSerializer):
    class Meta:
         model = MediaPeofile
         fields = ('image','user')
+
+class MediaproSerialzer(serializers.ModelSerializer):
+       class Meta:
+        model = MediaPeofile
+        fields = ('image',)
         
 class CaptionSerialzer(serializers.ModelSerializer):
        class Meta:
@@ -33,11 +38,11 @@ class UserEditSerializer(serializers.ModelSerializer):
         class Meta:
             
             model = User
-            fields = ('username','email')
+            fields = ('username',)
             
             def update(self, instance, validated_data):
         
-                instance.set_password(validated_data['username'],validated_data['email'])
+                instance.set_password(validated_data['username'])
                 instance.save()
 
                 return instance

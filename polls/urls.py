@@ -18,7 +18,7 @@ urlpatterns = [
         path('changepassword/<str:username>', views.ChangePass.as_view(), name='changepass'),
         path('postcreate/', views.CreatPost.as_view(), name='postcomment'),
         path('postsingle/<int:pk>', views.SinglePost.as_view(), name='postsingle'),
-        path('setprofile/<int:pk>', views.SetImageProfile.as_view(), name='changepass'),
+        path('setprofile/<int:id>', views.SetImageProfile.as_view(), name='profile'),
         path('createcomment/<int:pk>', views.CreateComment.as_view(), name='createcomment'),
         path('myprofile/<int:pk>', views.MyProfile.as_view(), name='changepass'),
         path('logout/', views.CookielogoutView.as_view()),

@@ -64,7 +64,13 @@ class UserIsOwnerPostOrReadOnly(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         if request.method in permissions.SAFE_METHODS:
             return True
-        return obj.author == request.user.id    
+        return obj.author == request.user.id   
+    
+class UserIsOwnerimageOrReadOnly(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        return obj.user == request.user.id    
 
 class SignUp(CreateAPIView):
     permission_classes = (AllowAny,)
@@ -147,15 +153,15 @@ class EditPost(UpdateAPIView):
         return qs.filter(author=self.request.user)
 
     
-class SetImageProfile(UpdateAPIView):
+class SetImageProfile(RetrieveUpdateAPIView):
     
-    permission_classes=(IsAuthenticated,UserIsOwnerOrReadOnly)
+    permission_classes=(IsAuthenticated,UserIsOwnerimageOrReadOnly)
     queryset = MediaPeofile.objects.all()
-    serializer_class = MediaSerialzer
+    serializer_class = MediaproSerialzer
+    lookup_field='id'
     def get_queryset(self):
         
-        qs=super().get_queryset()
-        return qs.filter(user=self.request.user)
+        return self.queryset.filter(user=self.request.user)
     
     
 class CreateComment(CreateAPIView):
