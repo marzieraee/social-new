@@ -44,3 +44,8 @@ class Comment(models.Model):
     commenter = models.ForeignKey(User,on_delete=models.CASCADE,related_name='comments',null=True)
     body = models.TextField()
     created_on = models.DateTimeField(auto_now_add=True)
+    
+    
+class Cptions(models.Model):
+    bio=models.TextField(max_length=1000)
+    user=models.ForeignKey(User,on_delete=models.CASCADE,related_name='bio',null=True)

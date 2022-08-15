@@ -18,6 +18,11 @@ class MediaSerialzer(serializers.ModelSerializer):
    class Meta:
         model = MediaPeofile
         fields = ('image','user')
+        
+class CaptionSerialzer(serializers.ModelSerializer):
+       class Meta:
+        model = Cptions
+        fields = ('bio','user')
 
         
         
@@ -38,9 +43,14 @@ class UserEditSerializer(serializers.ModelSerializer):
                 
 class UserProfileSerializer(serializers.ModelSerializer):
     media = MediaSerialzer(read_only=True)
+    bio = serializers.SlugRelatedField(
+        many=True,
+        read_only=True,
+        slug_field='bio'
+    )
     class Meta:
         model=User
-        fields=('username','email','date_joined','last_login','media')
+        fields=('username','email','date_joined','last_login','media','bio',)
     
     
             
@@ -126,6 +136,10 @@ class RegisterSerializer(serializers.ModelSerializer):
             user=user,
             image='profile/x22.png',)
         image.save()
+        bio=Cptions.objects.create(user=user,bio='hi im here')
+        
+        bio.save()
+        
         return user        
             
 class CommentListSerializer(serializers.ModelSerializer):

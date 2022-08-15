@@ -9,7 +9,7 @@ urlpatterns = [
         
          path('', views.PostList.as_view(), name='postlistapi'),
         path('register/', views.SignUp.as_view(), name='register'),
-        path('profile/<str:user__username>', views.Profile.as_view(), name='profile'),
+        path('profile/<str:username>', views.Profile.as_view(), name='profile'),
         path('editprofile/<int:pk>', views.EditProfile.as_view(), name='profile'),
         path('editpost/<int:pk>', views.EditPost.as_view(), name='postsingle'),
         path('token/',views.CookieTokenObtainPairView.as_view(), name='token_obtain_pair'),
