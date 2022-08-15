@@ -188,10 +188,11 @@ class MyProfile(RetrieveUpdateAPIView):
         return qs.filter(username=self.request.user)
     
 
-class CookielogoutView(TokenRefreshView):
+class CookielogoutView(APIView):
     def response(self, request, response, *args, **kwargs):
         if response.data.get('refresh'):
             cookie_max_age = 3600 * 24 * 14 # 14 days
             response.delete_cookie('refresh')
+            response.save()
         return response
-    serializer_class = CookieTokenRefreshSerializer
+    
