@@ -137,7 +137,7 @@ class SinglePost(RetrieveAPIView):
 
 
 class EditPost(UpdateAPIView):
-    permission_classes=(IsAuthenticated)
+    permission_classes=(IsAuthenticated,)
     queryset = MyPost.objects.all()
     serializer_class = PostUpdateSerializer
     
@@ -189,7 +189,7 @@ class MyProfile(RetrieveUpdateAPIView):
     
 
 class CookielogoutView(APIView):
-    def post(self, response, *args, **kwargs):
+    def post(self, request, response, *args, **kwargs):
         if response.data.get('refresh'):
             response.delete_cookie('refresh')
             response.save()

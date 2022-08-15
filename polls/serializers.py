@@ -169,7 +169,7 @@ class PostListSerializer(serializers.ModelSerializer):
         
         model= MyPost
         
-        fields=('title','contet','likes','author','posts','image',)
+        fields=('title','content','likes','author','posts','image',)
                 
         
         
@@ -184,12 +184,11 @@ class MediaPicSerializer(serializers.ModelSerializer):
         
         
 class PostCreatSerializer(serializers.ModelSerializer):
-    
     class Meta:
         
         model=MyPost
         
-        fields=('title','contet',)
+        fields=('title','content','image',)
         
         
 
@@ -199,7 +198,7 @@ class PostUpdateSerializer(serializers.ModelSerializer):
         
         model=MyPost
         
-        fields=('title','contet',)
+        fields=('title','content','image')
 
  
         

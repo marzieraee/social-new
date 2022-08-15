@@ -23,7 +23,7 @@ class MyPost(models.Model):
     user_likes = models.ManyToManyField(User,related_name='userlike',blank=True)
     title=models.CharField(max_length=200)
     image = models.ImageField(default='posts/x22.png',upload_to='posts/')
-    contet=models.TextField(null=True)
+    content=models.TextField(null=True)
     likes = models.PositiveIntegerField(default=0) 
     created_date=models.DateTimeField(auto_now_add=True)
           
@@ -36,7 +36,7 @@ class MyPost(models.Model):
 
 class MediaPic(models.Model):
     image=models.ImageField(null=True,blank=True,default='',upload_to='posts/') 
-    post=models.ForeignKey(MyPost,related_name='pic',on_delete=models.CASCADE)
+    post=models.OneToOneField(MyPost,related_name='pic',on_delete=models.CASCADE)
     
     
 class Comment(models.Model):
