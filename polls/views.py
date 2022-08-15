@@ -15,6 +15,8 @@ from rest_framework import status
 from rest_framework_simplejwt.views import TokenRefreshView, TokenObtainPairView 
 from rest_framework_simplejwt.serializers import TokenRefreshSerializer
 from rest_framework_simplejwt.exceptions import InvalidToken
+from rest_framework import response
+
 
 
 
@@ -158,7 +160,7 @@ class SetImageProfile(RetrieveUpdateAPIView):
     permission_classes=(IsAuthenticated,)
     queryset = MediaPeofile.objects.all()
     serializer_class = MediaproSerialzer
-    lookup_field='user_id'
+    lookup_field='id'
     def get_queryset(self):
         
         return self.queryset.filter(user=self.request.user)
@@ -197,7 +199,7 @@ class MyProfile(RetrieveUpdateAPIView):
 class CookielogoutView(APIView):
     def post(self, request, response, *args, **kwargs):
         if response.data.get('refresh'):
-            response.delete_cookie('refresh')
+            response.delete_cookie('refresh_token')
             response.save()
         return response
     
