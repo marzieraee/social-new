@@ -188,12 +188,11 @@ class MyProfile(RetrieveUpdateAPIView):
         return qs.filter(username=self.request.user)
     
 
-class LogoutApi(generics.GenericAPIView):
+class CookielogoutView(TokenObtainPairView):
     permission_classes=(IsAuthenticated,)
-    serializer_class=LogoutSerializer
-    
-    def post(self,request):
-        serializer=self.serializer_class(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return response(status=status.HTTP_204_NO_CONTENT)
+    def finalize_response(self, request, response, *args, **kwargs):
+        
+        if response.data.get('refresh'):
+            cookie_max_age = 3600 * 24 * 14 # 14 days
+            response.delete_cookie('refresh_token')
+        return super().finalize_response(request, response, *args, **kwargs)
