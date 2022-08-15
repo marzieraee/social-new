@@ -1,10 +1,8 @@
-from asyncio import exceptions
-from urllib import response
+from http.client import HTTPResponse
 from .models import *
 # Create your views here.
 from .serializers import *
 from rest_framework.permissions import IsAuthenticated,AllowAny
-
 from rest_framework.views import APIView
 from rest_framework.generics import RetrieveAPIView,UpdateAPIView,CreateAPIView,RetrieveUpdateAPIView,ListAPIView,ListCreateAPIView,RetrieveUpdateDestroyAPIView
 # from .paginations import * 
@@ -15,7 +13,6 @@ from rest_framework import status
 from rest_framework_simplejwt.views import TokenRefreshView, TokenObtainPairView 
 from rest_framework_simplejwt.serializers import TokenRefreshSerializer
 from rest_framework_simplejwt.exceptions import InvalidToken
-from rest_framework import response
 
 
 
@@ -42,7 +39,7 @@ class CookieTokenObtainPairView(TokenObtainPairView):
   def finalize_response(self, request, response, *args, **kwargs):
     if response.data.get('refresh'):
         cookie_max_age = 3600 * 24 * 14 # 14 days
-        response.set_cookie('refresh_token', response.data['refresh'], max_age=cookie_max_age, httponly=True , samesite='None',secure=True)
+        response.set_cookie('refresh_token', response.data['refresh'], max_age=cookie_max_age, httponly=True , samesite='None')
         del response.data['refresh']
     return super().finalize_response(request, response, *args, **kwargs)
 
@@ -50,7 +47,7 @@ class CookieTokenRefreshView(TokenRefreshView):
     def finalize_response(self, request, response, *args, **kwargs):
         if response.data.get('refresh'):
             cookie_max_age = 3600 * 24 * 14 # 14 days
-            response.set_cookie('refresh_token', response.data['refresh'], max_age=cookie_max_age, httponly=True  ,samesite='None',secure=True)
+            response.set_cookie('refresh_token', response.data['refresh'], max_age=cookie_max_age, httponly=True  ,samesite='None')
             del response.data['refresh']
         return super().finalize_response(request, response, *args, **kwargs)
     serializer_class = CookieTokenRefreshSerializer
@@ -195,11 +192,11 @@ class MyProfile(RetrieveUpdateAPIView):
         qs=super().get_queryset()
         return qs.filter(username=self.request.user)
     
-
-class CookielogoutView(APIView):
-    def post(self, request, response, *args, **kwargs):
-        if response.data.get('refresh'):
-            response.delete_cookie('refresh_token')
-            response.save()
-        return response
     
+
+class logout(APIView):
+    def post(self,request):
+       print(request.COOKIES)
+       response = Response("Cookies Deleted")
+       response.delete_cookie("refresh_token", path="/")
+       return response 
