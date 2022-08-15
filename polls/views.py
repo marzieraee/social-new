@@ -189,7 +189,6 @@ class MyProfile(RetrieveUpdateAPIView):
     
 
 class CookielogoutView(TokenObtainPairView):
-    permission_classes=(IsAuthenticated,)
     def finalize_response(self, request, response, *args, **kwargs):
         
         if response.data.get('refresh'):
