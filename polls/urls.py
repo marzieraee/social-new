@@ -22,6 +22,7 @@ urlpatterns = [
         path('createcomment/<int:pk>', views.CreateComment.as_view(), name='createcomment'),
         path('myprofile/<int:pk>', views.MyProfile.as_view(), name='changepass'),
         path('logout/', views.logout.as_view()),
+        path('mypost/<str:username>', views.Mypost.as_view(), name='changepass'),
 
         
 #     path('postcreate/', views.PostComment.as_view(), name='postcomment'),

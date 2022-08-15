@@ -39,7 +39,7 @@ class CookieTokenObtainPairView(TokenObtainPairView):
   def finalize_response(self, request, response, *args, **kwargs):
     if response.data.get('refresh'):
         cookie_max_age = 3600 * 24 * 14 # 14 days
-        response.set_cookie('refresh_token', response.data['refresh'], max_age=cookie_max_age, httponly=True , samesite='None')
+        response.set_cookie('refresh_token', response.data['refresh'], max_age=cookie_max_age, httponly=True , samesite='None',secure=True)
         del response.data['refresh']
     return super().finalize_response(request, response, *args, **kwargs)
 
@@ -47,7 +47,7 @@ class CookieTokenRefreshView(TokenRefreshView):
     def finalize_response(self, request, response, *args, **kwargs):
         if response.data.get('refresh'):
             cookie_max_age = 3600 * 24 * 14 # 14 days
-            response.set_cookie('refresh_token', response.data['refresh'], max_age=cookie_max_age, httponly=True  ,samesite='None')
+            response.set_cookie('refresh_token', response.data['refresh'], max_age=cookie_max_age, httponly=True  ,samesite='None',secure=True)
             del response.data['refresh']
         return super().finalize_response(request, response, *args, **kwargs)
     serializer_class = CookieTokenRefreshSerializer
@@ -98,8 +98,15 @@ class EditProfile(RetrieveUpdateAPIView) :
     permission_classes=(IsAuthenticated,UserIsOwnerOrReadOnly)
         
         
-    
-          
+class Mypost(ListAPIView):
+    lookup_field = 'username'
+    serializer_class = PostListSerializer
+    permission_classes=(IsAuthenticated,)
+    queryset = MyPost.objects.all()
+    def get_queryset(self):
+        qs=super().get_queryset()
+        
+        return qs.filter(author=self.request.user)
         
         
 class ChangePass(RetrieveUpdateAPIView):
@@ -195,7 +202,9 @@ class MyProfile(RetrieveUpdateAPIView):
     
 
 class logout(APIView):
+    
     def post(self,request):
+        
        print(request.COOKIES)
        response = Response("Cookies Deleted")
        response.delete_cookie("refresh_token", path="/")
