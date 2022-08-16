@@ -84,6 +84,7 @@ class SignUp(CreateAPIView):
 
 # 'use for profile'
 class Profile(RetrieveAPIView):
+    permission_classes=(IsAuthenticated,)
     serializer_class = UserProfileSerializer
     queryset = User.objects.all()
     lookup_field = 'username'
@@ -205,7 +206,9 @@ class logout(APIView):
     
     def post(self,request):
         
-       print(request.COOKIES)
-       response = Response("Cookies Deleted")
-       response.delete_cookie("refresh_token", path="/")
-       return response 
+       response = Response()
+    
+
+       response.delete_cookie('refresh_token')
+       response.data={"masage":"yesss"}
+       return response
