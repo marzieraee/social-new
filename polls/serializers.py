@@ -174,7 +174,7 @@ class PostListSerializer(serializers.ModelSerializer):
         
         model= MyPost
         
-        fields=('title','content','likes','author','posts','image',)
+        fields=('title','content','likes','author','posts','image','id')
                 
         
         

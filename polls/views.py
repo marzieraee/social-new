@@ -139,7 +139,12 @@ class CreatPost(CreateAPIView):
     def perform_create(self,serializer):
         serializer.save(author=self.request.user)
         
-
+    def create(self, request, *args, **kwargs):
+        response = super().create(request, *args, **kwargs)
+        return Response({
+            'status': 200,
+            
+        })
 
 
 class SinglePost(RetrieveAPIView):
