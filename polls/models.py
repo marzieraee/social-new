@@ -9,9 +9,12 @@ from django.contrib.auth.models import User
 
 
 class MyUser(models.Model):
-    username=models.ForeignKey(User,on_delete=models.CASCADE,related_name='user_related_name')
-    email=models.EmailField()
-    
+    username=models.OneToOneField(User,on_delete=models.CASCADE,related_name='user_related_name')
+    image=models.ImageField(default='profile/x22.png',upload_to='profile/')
+    bio=models.TextField(null=True)
+
+
+
 
 class MediaPeofile(models.Model):
     user=models.OneToOneField(User,related_name='media',on_delete=models.CASCADE)
@@ -19,7 +22,7 @@ class MediaPeofile(models.Model):
     
     
 class MyPost(models.Model):
-    author=models.ForeignKey(User,on_delete=models.CASCADE,null=True,related_name='related_name')
+    author=models.ForeignKey(MyUser,on_delete=models.CASCADE,null=True,related_name='related_name')
     user_likes = models.ManyToManyField(User,related_name='userlike',blank=True)
     title=models.CharField(max_length=200)
     image = models.ImageField(default='posts/x22.png',upload_to='posts/')
@@ -41,7 +44,7 @@ class MediaPic(models.Model):
     
 class Comment(models.Model):
     post=models.ForeignKey(MyPost,on_delete=models.CASCADE,related_name='posts',default=1)
-    commenter = models.ForeignKey(User,on_delete=models.CASCADE,related_name='comments',null=True)
+    commenter = models.ForeignKey(MyUser,on_delete=models.CASCADE,related_name='comments',null=True)
     body = models.TextField()
     created_on = models.DateTimeField(auto_now_add=True)
     

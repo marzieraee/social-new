@@ -9,12 +9,12 @@ from rest_framework import serializers
 from rest_framework_simplejwt.tokens import RefreshToken
 from .models import *
 
-
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
 
+from drf_writable_nested.serializers import WritableNestedModelSerializer
 
 
 class MediaSerialzer(serializers.ModelSerializer):
@@ -34,35 +34,28 @@ class CaptionSerialzer(serializers.ModelSerializer):
 
         
         
-class UserEditSerializer(serializers.ModelSerializer):
+            
+            
+class MyUserSerializer(serializers.ModelSerializer):
+        
         class Meta:
             
-            model = User
-            fields = ('username',)
-            
-            def update(self, instance, validated_data):
-        
-                instance.set_password(validated_data['username'])
-                instance.save()
-
-                return instance
+            model = MyUser
+            fields = ('username','image','bio')
             
             
+           
                 
 class UserProfileSerializer(serializers.ModelSerializer):
-    media = MediaSerialzer(read_only=True)
-    bio = serializers.SlugRelatedField(
-        many=True,
-        read_only=True,
-        slug_field='bio'
-    )
+    user_related_name = MyUserSerializer()
+   
     class Meta:
         model=User
-        fields=('username','email','date_joined','last_login','media','bio',)
+        fields=('username','email','date_joined','last_login','user_related_name',)
     
     
             
-class UserCreatSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     
     
     class Meta:
@@ -71,7 +64,29 @@ class UserCreatSerializer(serializers.ModelSerializer):
         
         fields=('username','email',)
         
+            
         
+class UserEditSerializer(WritableNestedModelSerializer):
+        user_related_name=MyUserSerializer()
+        
+        class Meta:
+            
+            model = User
+            fields = ('username','user_related_name')
+            
+            def update(self, instance, validated_data):
+        
+                instance.set_password(validated_data['username'],validated_data['user_related_name'])
+                user_data = validated_data.get('user_related_name')
+                username = self.data['user_related_name']['username']
+                user = MyUser.objects.get(username=username)
+                user_serializer = MyUserSerializer(data=user_data)
+                if user_serializer.is_valid():
+                    user_serializer.update(user, user_data)
+            
+                instance.save()
+
+                return instance
         
         
         
@@ -97,7 +112,7 @@ class ChangePasswordSerializer(serializers.ModelSerializer):
         return value
 
     def update(self, instance, validated_data):
-
+        
         instance.set_password(validated_data['password'])
         instance.save()
 
@@ -139,14 +154,10 @@ class RegisterSerializer(serializers.ModelSerializer):
         
         user.set_password(validated_data['password'])
         user.save()
-        
-        image=MediaPeofile.objects.create(
-            user=user,
-            image='profile/x22.png',)
-        image.save()
-        bio=Cptions.objects.create(user=user,bio='hi im here')
-        
-        bio.save()
+        username=MyUser.objects.create(username=user,
+            image='profile/x22.png'
+            ,bio='hi im here')
+        username.save()
         
         return user        
             
@@ -174,7 +185,7 @@ class PostListSerializer(serializers.ModelSerializer):
         
         model= MyPost
         
-        fields=('title','content','likes','author','posts','image','id')
+        fields=('title','content','likes','author','posts','image','id','created_date')
                 
         
         

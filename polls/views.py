@@ -84,7 +84,7 @@ class SignUp(CreateAPIView):
 
 # 'use for profile'
 class Profile(RetrieveAPIView):
-    permission_classes=(IsAuthenticated,)
+    # permission_classes=(IsAuthenticated,)
     serializer_class = UserProfileSerializer
     queryset = User.objects.all()
     lookup_field = 'username'
@@ -199,7 +199,7 @@ class MyProfile(RetrieveUpdateAPIView):
     
     permission_classes=(IsAuthenticated,UserIsOwnerOrReadOnly)
     queryset = User.objects.all()
-    serializer_class = UserProfileSerializer
+    serializer_class = UserEditSerializer
     def get_queryset(self):
         
         qs=super().get_queryset()
@@ -217,3 +217,6 @@ class logout(APIView):
        response.delete_cookie('refresh_token')
        response.data={"masage":"yesss"}
        return response
+   
+   
+   
