@@ -13,20 +13,7 @@ from django.contrib.auth.password_validation import validate_password
 from drf_writable_nested.serializers import WritableNestedModelSerializer
 
 
-class MediaSerialzer(serializers.ModelSerializer):
-   class Meta:
-        model = MediaPeofile
-        fields = ('image','user')
 
-class MediaproSerialzer(serializers.ModelSerializer):
-       class Meta:
-        model = MediaPeofile
-        fields = ('image',)
-        
-class CaptionSerialzer(serializers.ModelSerializer):
-       class Meta:
-        model = Cptions
-        fields = ('bio','user')
 
         
         
@@ -37,7 +24,7 @@ class MyUserSerializer(serializers.ModelSerializer):
         class Meta:
             
             model = MyUser
-            fields = ('username','image','bio')
+            fields = ('id','image','bio')
             
             
            
@@ -185,12 +172,7 @@ class PostListSerializer(serializers.ModelSerializer):
                 
         
         
-class MediaPicSerializer(serializers.ModelSerializer):
-    post=PostListSerializer()
-    class Meta:
-        
-        
-        fields=('image','post')
+
         
     
         
@@ -213,24 +195,6 @@ class PostUpdateSerializer(serializers.ModelSerializer):
         fields=('title','content','image')
 
  
-        
-        
-class LogoutSerializer(serializers.Serializer):
-    refresh=serializers.CharField()
-    
-    
-    def validate(self, attrs):
-        self.token=attrs['refresh']
-        
-        return attrs
-    
-    def save(self, **kwargs):
-        
-        try:
-            RefreshToken(self.token).blacklist()
-        
-        except TokenError:
-            self.fail('bad token')
         
         
 

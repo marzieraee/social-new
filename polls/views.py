@@ -108,6 +108,18 @@ class Mypost(ListAPIView):
         qs=super().get_queryset()
         
         return qs.filter(author=self.request.user)
+
+
+class PostByUser(ListAPIView):
+    lookup_field = 'username'
+    serializer_class = PostListSerializer
+    permission_classes=(IsAuthenticated,)
+    queryset = MyPost.objects.all()
+    def get_queryset(self,*args, **kwargs):
+        qs=super().get_queryset()
+        
+        return qs.filter(author__username=self.kwargs['username'])        
+        
         
         
 class ChangePass(RetrieveUpdateAPIView):
@@ -137,6 +149,7 @@ class CreatPost(CreateAPIView):
     queryset = MyPost.objects.all()
     
     def perform_create(self,serializer):
+        
         serializer.save(author=self.request.user)
         
     def create(self, request, *args, **kwargs):
@@ -165,15 +178,7 @@ class EditPost(UpdateAPIView):
         return qs.filter(author=self.request.user)
 
     
-class SetImageProfile(RetrieveUpdateAPIView):
-    
-    permission_classes=(IsAuthenticated,)
-    queryset = MediaPeofile.objects.all()
-    serializer_class = MediaproSerialzer
-    lookup_field='id'
-    def get_queryset(self):
-        
-        return self.queryset.filter(user=self.request.user)
+
     
     
 class CreateComment(CreateAPIView):
@@ -205,8 +210,14 @@ class MyProfile(RetrieveUpdateAPIView):
         qs=super().get_queryset()
         return qs.filter(username=self.request.user)
     
-    
+    def get_serializer_class(self):
+            if self.request.method=='GET':
+                return UserProfileSerializer
 
+            else:
+                return UserEditSerializer
+        
+        
 class logout(APIView):
     
     def post(self,request):
