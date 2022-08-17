@@ -1,9 +1,5 @@
-from ast import Expression
-from asyncio import exceptions
 import email
-from email.mime import image
 from lib2to3.pgen2.tokenize import TokenError
-from urllib import request
 from django.forms import CharField
 from rest_framework import serializers
 from rest_framework_simplejwt.tokens import RefreshToken

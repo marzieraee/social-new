@@ -10,3 +10,4 @@ sqlparse==0.4.2
 whitenoise==6.2.0
 django_cors_headers==3.13.0
 widgetsnbextension==3.6.0
+drf-writable-nested==0.7.0
