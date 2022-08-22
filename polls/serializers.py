@@ -55,7 +55,7 @@ class UserEditSerializer(WritableNestedModelSerializer):
         class Meta:
             
             model = User
-            fields = ('username','user_related_name')
+            fields = ('username','user_related_name','email')
             
             def update(self, instance, validated_data):
         
