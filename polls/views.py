@@ -1,4 +1,3 @@
-from http.client import HTTPResponse
 from .models import *
 # Create your views here.
 from .serializers import *
@@ -22,7 +21,9 @@ def get_tokens_for_user(user):
     return {
         'refresh': str(refresh),
         'access': str(refresh.access_token),
-    }
+        
+        }
+    
 
 
 class CookieTokenRefreshSerializer(TokenRefreshSerializer):
@@ -36,12 +37,15 @@ class CookieTokenRefreshSerializer(TokenRefreshSerializer):
             raise InvalidToken('No valid token found in cookie \'refresh_token\'')
 
 class CookieTokenObtainPairView(TokenObtainPairView):
-  def finalize_response(self, request, response, *args, **kwargs):
-    if response.data.get('refresh'):
-        cookie_max_age = 3600 * 24 * 14 # 14 days
-        response.set_cookie('refresh_token', response.data['refresh'], max_age=cookie_max_age, httponly=True , samesite='None',secure=True)
-        del response.data['refresh']
-    return super().finalize_response(request, response, *args, **kwargs)
+    serializer_class = CustomTokenObtainPairSerializer
+    def finalize_response(self, request, response, *args, **kwargs):
+        if response.data.get('refresh'):
+            cookie_max_age = 3600 * 24 * 14 # 14 days
+            response.set_cookie('refresh_token', response.data['refresh'], max_age=cookie_max_age, httponly=True , samesite='None',secure=True)
+            del response.data['refresh']
+        
+   
+        return super().finalize_response(request, response, *args, **kwargs)
 
 class CookieTokenRefreshView(TokenRefreshView):
     def finalize_response(self, request, response, *args, **kwargs):
@@ -231,3 +235,12 @@ class logout(APIView):
    
    
    
+class fallow(CreateAPIView):
+    serializer_class = FallowSerializer
+    permission_classes=(IsAuthenticated,)
+    lookup_field = 'username'
+    
+
+    
+    def perform_create(self,serializer):
+        serializer.save(from_user=self.request.user,to_user=self.kwargs['id'])

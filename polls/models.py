@@ -40,3 +40,12 @@ class Comment(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     
  
+ 
+ 
+class Fallow(models.Model):
+    from_user=models.ForeignKey(User,on_delete=models.CASCADE,related_name='from_user',null=True)
+    to_user=models.ForeignKey(User,on_delete=models.CASCADE,related_name='to_user',null=True)
+
+     
+     
+     

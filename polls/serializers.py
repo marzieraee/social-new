@@ -9,11 +9,20 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
-
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from drf_writable_nested.serializers import WritableNestedModelSerializer
 
 
-
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    
+    def validate(self, attrs):
+        # The default result (access/refresh tokens)
+        data = super(CustomTokenObtainPairSerializer, self).validate(attrs)
+        # Custom data you want to include
+        data.update({'username': self.user.username})
+        data.update({'user_id': self.user.id})
+        # and everything else you want to send in the response
+        return data
 
         
         
@@ -197,4 +206,26 @@ class PostUpdateSerializer(serializers.ModelSerializer):
  
         
         
+class FallowSerializer(serializers.ModelSerializer):
+    from_user=UserProfileSerializer()
+    to_user=UserProfileSerializer()
+    class Meta:
+        model = Fallow
+        fields = (
+            'from_user','to_user'
+            )
+    
+    
+    
+       
 
+    def create(self, validated_data):
+        
+        user = Fallow.objects.create(
+            from_user=validated_data['from_user'],
+            to_user=validated_data['to_user'],
+        )
+        user.save()
+        return user
+    
+    
