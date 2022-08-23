@@ -12,3 +12,4 @@ django_cors_headers==3.13.0
 widgetsnbextension==3.6.0
 drf-writable-nested==0.7.0
 PyJWT==2.4.0
+djangorestframework-api-key==2.2.0
