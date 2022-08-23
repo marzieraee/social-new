@@ -23,7 +23,7 @@ urlpatterns = [
         path('logout/', views.logout.as_view()),
         path('mypost/<str:username>', views.Mypost.as_view(), name='changepass'),
         path('postuser/<str:username>', views.PostByUser.as_view(), name='changepass'),
-        path('fallow/<int:pk>', views.fallow.as_view(), name='changepass'),
+        path('fallow/', views.FollowingView.as_view(), name='changepass'),
 
 
 

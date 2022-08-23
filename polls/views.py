@@ -23,7 +23,7 @@ def get_tokens_for_user(user):
         'access': str(refresh.access_token),
         
         }
-    
+
 
 
 class CookieTokenRefreshSerializer(TokenRefreshSerializer):
@@ -36,16 +36,37 @@ class CookieTokenRefreshSerializer(TokenRefreshSerializer):
         else:
             raise InvalidToken('No valid token found in cookie \'refresh_token\'')
 
+    # def finalize_response(self, request, response, *args, **kwargs):
+    #     if response.data.get('refresh'):
+    #         cookie_max_age = 3600 * 24 * 14 # 14 days
+    #         response.set_cookie('refresh_token', response.data['refresh'], max_age=cookie_max_age, httponly=True , samesite='None',secure=True)
+    #         del response.data['refresh']
 class CookieTokenObtainPairView(TokenObtainPairView):
-    serializer_class = CustomTokenObtainPairSerializer
-    def finalize_response(self, request, response, *args, **kwargs):
-        if response.data.get('refresh'):
-            cookie_max_age = 3600 * 24 * 14 # 14 days
-            response.set_cookie('refresh_token', response.data['refresh'], max_age=cookie_max_age, httponly=True , samesite='None',secure=True)
-            del response.data['refresh']
+    
+    serializer_class = MyTokenObtainPairSerializer
+    def post(self, request, *args, **kwargs):
+        # you need to instantiate the serializer with the request data
+        serializer = self.get_serializer(data=request.data)
+        # you must call .is_valid() before accessing validated_data
+        serializer.is_valid(raise_exception=True)  
+
+        # get access and refresh tokens to do what you like with
+        access = serializer.validated_data.get("access", None)
+        refresh = serializer.validated_data.get("refresh", None)
+        email = serializer.validated_data.get("email", None)
+
+        # build your response and set cookie
+        if access is not None:
+            response = Response({"access": access, "refresh": refresh, "email": email}, status=200)
+            response.set_cookie('token', access, httponly=True,samesite='None',secure=True)
+            response.set_cookie('refresh', refresh, httponly=True,samesite='None',secure=True)
+            response.set_cookie('email', email,httponly=True,samesite='None',secure=True)
+            return response
+
+        return Response({"Error": "Something went wrong"}, status=400)
         
    
-        return super().finalize_response(request, response, *args, **kwargs)
+        # return super().finalize_response(request, response, *args, **kwargs)
 
 class CookieTokenRefreshView(TokenRefreshView):
     def finalize_response(self, request, response, *args, **kwargs):
@@ -235,12 +256,26 @@ class logout(APIView):
    
    
    
-class fallow(CreateAPIView):
-    serializer_class = FallowSerializer
-    permission_classes=(IsAuthenticated,)
-    lookup_field = 'username'
+# class fallow(CreateAPIView):
+#     serializer_class = FallowSerializer
+#     permission_classes=(IsAuthenticated,)
     
 
     
-    def perform_create(self,serializer):
-        serializer.save(from_user=self.request.user,to_user=self.kwargs['id'])
+#     def perform_create(self,serializer,*args, **kwargs):
+#         serializer.save(from_user=self.request.user,to_user=kwargs['pk'])
+        
+        
+#     def create(self, request, *args, **kwargs):
+#         response = super().create(request, *args, **kwargs)
+#         return Response({
+#         'status': 200,
+#         })
+
+
+
+
+class FollowingView(ListCreateAPIView):
+    queryset = Following.objects.all()
+    serializer_class = FollowingSerializer
+    permission_classes = [IsAuthenticated]

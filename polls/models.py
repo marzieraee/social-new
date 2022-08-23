@@ -1,10 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-# Create your models here.
-
-
-
 class MyUser(models.Model):
     username=models.OneToOneField(User,on_delete=models.CASCADE,related_name='user_related_name')
     image=models.ImageField(default='profile/x22.png',upload_to='profile/')
@@ -42,10 +38,16 @@ class Comment(models.Model):
  
  
  
-class Fallow(models.Model):
-    from_user=models.ForeignKey(User,on_delete=models.CASCADE,related_name='from_user',null=True)
-    to_user=models.ForeignKey(User,on_delete=models.CASCADE,related_name='to_user',null=True)
 
-     
-     
+class Follower(models.Model):
+    user = models.OneToOneField(User,related_name="followers", on_delete=models.CASCADE)
+    follower_user = models.ManyToManyField(User,related_name='follower_user')
+
+
+
+class Following(models.Model):
+    user = models.OneToOneField(User, related_name="following",unique=False, on_delete=models.CASCADE)
+    following_user = models.ManyToManyField(User, related_name='following_user')
+
+
      

@@ -25,7 +25,22 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         return data
 
         
-        
+
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    
+    def validate(self, data):
+        data = super().validate(data)
+        refresh = self.get_token(self.user)
+        data["refresh"] = str(refresh)   # comment out if you don't want this
+        data["access"] = str(refresh.access_token)
+        data["email"] = self.user.email
+
+        """ Add extra responses here should you wish
+        data["userid"] = self.user.id
+        data["my_favourite_bird"] = "Jack Snipe"
+        """
+        return data  
+
             
             
 class MyUserSerializer(serializers.ModelSerializer):
@@ -206,26 +221,17 @@ class PostUpdateSerializer(serializers.ModelSerializer):
  
         
         
-class FallowSerializer(serializers.ModelSerializer):
-    from_user=UserProfileSerializer()
-    to_user=UserProfileSerializer()
+class FollowingSerializer(serializers.ModelSerializer):
+    new_following = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), required=True, write_only=True)
     class Meta:
-        model = Fallow
-        fields = (
-            'from_user','to_user'
-            )
-    
-    
-    
-       
+        model = Following
+        fields = ('user', 'following_user', 'new_following')
+        read_only_fields = ('following_user',)
 
     def create(self, validated_data):
-        
-        user = Fallow.objects.create(
-            from_user=validated_data['from_user'],
-            to_user=validated_data['to_user'],
-        )
-        user.save()
-        return user
-    
-    
+        user = validated_data['user']
+        new_follwoing = validated_data['new_following']
+        user.following.following_user.add(new_follwoing)
+        new_follwoing.followers.following_user.add(user)
+
+        return user.following
