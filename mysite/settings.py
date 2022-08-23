@@ -34,6 +34,7 @@ ALLOWED_HOSTS = ['social-new2.herokuapp.com','127.0.0.1']
 
 INSTALLED_APPS = [
     'rest_framework',
+    "rest_framework_api_key",
     'corsheaders',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
@@ -44,7 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'polls',
-    'login'
+    'login',
 
     
 ]

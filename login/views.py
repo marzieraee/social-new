@@ -9,9 +9,7 @@ from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import ensure_csrf_cookie
 from login.serializers import *
 from login.utils import *
-from django.conf import settings
 
-SECRET_KEY='marzie'
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -62,8 +60,8 @@ def refresh_token_view(request):
         raise exceptions.AuthenticationFailed(
             'Authentication credentials were not provided.')
     try:
-        payload = jwt.decode(
-            refresh_token, SECRET_KEY, algorithms=['HS256'])
+        payload = jwt
+        print(jwt)
     except jwt.ExpiredSignatureError:
         raise exceptions.AuthenticationFailed(
             'expired refresh token, please login again.')

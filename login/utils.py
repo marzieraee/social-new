@@ -1,9 +1,8 @@
 import datetime
-import jwt
+import jwt 
+
 from django.conf import settings
-
-
-SECRET_KEY='marzie'
+key='yesss'
 
 def generate_access_token(user):
 
@@ -13,10 +12,11 @@ def generate_access_token(user):
         'iat': datetime.datetime.utcnow(),
         'username':user.username
     }
-    access_token1 = jwt.encode(access_token_payload, SECRET_KEY, algorithm='HS256')
-    print(access_token_payload,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+    access_token = jwt.encode(payload=access_token_payload,key=settings.SECRET_KEY, algorithm='HS256')
     
-    access_token=access_token1.decode('utf-8')
+    
+    print(access_token,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+
     return access_token
 
 
@@ -27,10 +27,6 @@ def generate_refresh_token(user):
         'iat': datetime.datetime.utcnow()
     }
     refresh_token = jwt.encode(
-        refresh_token_payload, SECRET_KEY, algorithm='HS256').decode('utf-8')
+        payload=refresh_token_payload, key=settings.SECRET_KEY, algorithm='HS256')
 
     return refresh_token
-
-
-
-
