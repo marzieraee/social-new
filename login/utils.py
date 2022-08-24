@@ -2,7 +2,6 @@ import datetime
 import jwt 
 
 from django.conf import settings
-key='yesss'
 
 def generate_access_token(user):
 
