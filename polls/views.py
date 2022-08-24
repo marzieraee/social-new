@@ -227,7 +227,7 @@ class CreateComment(CreateAPIView):
 #         return queryset
 
 class MyProfile(RetrieveUpdateAPIView):
-    
+    lookup_field = 'username'
     permission_classes=(IsAuthenticated,UserIsOwnerOrReadOnly)
     queryset = User.objects.all()
     serializer_class = UserEditSerializer
