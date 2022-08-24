@@ -1,3 +1,4 @@
+from os import access
 from django.shortcuts import render
 
 # Create your views here.
@@ -9,71 +10,114 @@ from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import ensure_csrf_cookie
 from login.serializers import *
 from login.utils import *
-
-
-@api_view(['POST'])
-@permission_classes([AllowAny])
-@ensure_csrf_cookie
-def login_view(request):
-    User = get_user_model()
-    username = request.data.get('username')
-    password = request.data.get('password')
-    response = Response()
-    if (username is None) or (password is None):
-        raise exceptions.AuthenticationFailed(
-            'username and password required')
-
-    user = User.objects.filter(username=username).first()
-    if(user is None):
-        raise exceptions.AuthenticationFailed('user not found')
-    if (not user.check_password(password)):
-        raise exceptions.AuthenticationFailed('wrong password')
-
-    serialized_user = UserSerializer(user).data
-
-    access_token = generate_access_token(user)
-    refresh_token = generate_refresh_token(user)
-
-    response.set_cookie(key='refreshtoken', value=refresh_token, httponly=True ,samesite='None',secure=True)
-    response.data = {
-        'access_token': access_token,
-        # 'user': serialized_user,
-    }
-
-    return response
+from django.views.decorators.csrf import csrf_exempt
 
 
 
 
-@api_view(['POST'])
-@permission_classes([AllowAny])
-@ensure_csrf_cookie
-def refresh_token_view(request):
-    '''
-    To obtain a new access_token this view expects 2 important things:
-        1. a cookie that contains a valid refresh_token
-        2. a header 'X-CSRFTOKEN' with a valid csrf token, client app can get it from cookies "csrftoken"
-    '''
-    User = get_user_model()
-    refresh_token = request.COOKIES.get('refreshtoken')
-    if refresh_token is None:
-        raise exceptions.AuthenticationFailed(
-            'Authentication credentials were not provided.')
-    try:
-        payload =jwt.decode(
-            refresh_token, settings.SECRET_KEY, algorithms=['HS256'])
-        print(jwt)
-    except jwt.ExpiredSignatureError:
-        raise exceptions.AuthenticationFailed(
-            'expired refresh token, please login again.')
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
 
-    user = User.objects.filter(id=payload.get('user_id')).first()
-    if user is None:
-        raise exceptions.AuthenticationFailed('User not found')
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+        
+        # Add custom claims
+        token['name'] = user.username
+        # ...
+        
+       
+        
+        return token
+    
+class MyTokenObtainPairView(TokenObtainPairView):
+    
+    serializer_class = MyTokenObtainPairSerializer
+    def post(self, request, *args, **kwargs):
+        # you need to instantiate the serializer with the request data
+        serializer = self.get_serializer(data=request.data)
+        # you must call .is_valid() before accessing validated_data
+        serializer.is_valid(raise_exception=True)  
 
-    if not user.is_active:
-        raise exceptions.AuthenticationFailed('user is inactive')
+        # get access and refresh tokens to do what you like with
+        access = serializer.validated_data.get("access", None)
+        refresh = serializer.validated_data.get("refresh", None)
+        email = serializer.validated_data.get("email", None)
+
+        # build your response and set cookie
+        if access is not None:
+            response = Response({"access": access, "refresh": refresh, "email": email}, status=200)
+            # response.set_cookie('token', access, httponly=True,samesite='None',secure=True)
+            response.set_cookie('refresh', refresh, httponly=True,samesite='None',secure=True)
+            # response.set_cookie('email', email,httponly=True,samesite='None',secure=True)
+            return Response({"access":response.data.get('access')})
+
+        return Response({"Error": "Something went wrong"}, status=400)
+
+# @api_view(['POST'])
+# @permission_classes([AllowAny])
+# @ensure_csrf_cookie
+# def login_view(request):
+#     User = get_user_model()
+#     username = request.data.get('username')
+#     password = request.data.get('password')
+#     response = Response()
+#     if (username is None) or (password is None):
+#         raise exceptions.AuthenticationFailed(
+#             'username and password required')
+
+#     user = User.objects.filter(username=username).first()
+#     if(user is None):
+#         raise exceptions.AuthenticationFailed('user not found')
+#     if (not user.check_password(password)):
+#         raise exceptions.AuthenticationFailed('wrong password')
+
+#     serialized_user = UserSerializer(user).data
+
+#     access_token = generate_access_token(user)
+#     refresh_token = generate_refresh_token(user)
+
+#     response.set_cookie(key='refreshtoken', value=refresh_token, httponly=True ,samesite='None',secure=True)
+#     response.data = {
+#         'access_token': access_token,
+#         # 'user': serialized_user,
+#     }
+
+#     return response
 
 
-    access_token = generate_access_token(user)
-    return Response({'access_token': access_token})
+
+
+# @api_view(['POST'])
+# @permission_classes([AllowAny])
+# @ensure_csrf_cookie
+# def refresh_token_view(request):
+#     '''
+#     To obtain a new access_token this view expects 2 important things:
+#         1. a cookie that contains a valid refresh_token
+#         2. a header 'X-CSRFTOKEN' with a valid csrf token, client app can get it from cookies "csrftoken"
+#     '''
+#     User = get_user_model()
+#     refresh_token = request.COOKIES.get('refreshtoken')
+#     if refresh_token is None:
+#         raise exceptions.AuthenticationFailed(
+#             'Authentication credentials were not provided.')
+#     try:
+#         payload =jwt.decode(
+#             refresh_token, settings.SECRET_KEY, algorithms=['HS256'])
+#         print(jwt)
+#     except jwt.ExpiredSignatureError:
+#         raise exceptions.AuthenticationFailed(
+#             'expired refresh token, please login again.')
+
+#     user = User.objects.filter(id=payload.get('user_id')).first()
+#     if user is None:
+#         raise exceptions.AuthenticationFailed('User not found')
+
+#     if not user.is_active:
+#         raise exceptions.AuthenticationFailed('user is inactive')
+
+
+#     access_token = generate_access_token(user)
+#     return Response({'access_token': access_token})

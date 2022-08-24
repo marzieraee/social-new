@@ -26,56 +26,56 @@ def get_tokens_for_user(user):
 
 
 
-class CookieTokenRefreshSerializer(TokenRefreshSerializer):
-    refresh = None
-    def validate(self, attrs):
-        attrs['refresh'] = self.context['request'].COOKIES.get('refresh_token')
-        if attrs['refresh']:
-            print(attrs['refresh'])
-            return super().validate(attrs)
-        else:
-            raise InvalidToken('No valid token found in cookie \'refresh_token\'')
+# class CookieTokenRefreshSerializer(TokenRefreshSerializer):
+#     refresh = None
+#     def validate(self, attrs):
+#         attrs['refresh'] = self.context['request'].COOKIES.get('refresh_token')
+#         if attrs['refresh']:
+#             print(attrs['refresh'])
+#             return super().validate(attrs)
+#         else:
+#             raise InvalidToken('No valid token found in cookie \'refresh_token\'')
 
-    # def finalize_response(self, request, response, *args, **kwargs):
-    #     if response.data.get('refresh'):
-    #         cookie_max_age = 3600 * 24 * 14 # 14 days
-    #         response.set_cookie('refresh_token', response.data['refresh'], max_age=cookie_max_age, httponly=True , samesite='None',secure=True)
-    #         del response.data['refresh']
-class CookieTokenObtainPairView(TokenObtainPairView):
+#     # def finalize_response(self, request, response, *args, **kwargs):
+#     #     if response.data.get('refresh'):
+#     #         cookie_max_age = 3600 * 24 * 14 # 14 days
+#     #         response.set_cookie('refresh_token', response.data['refresh'], max_age=cookie_max_age, httponly=True , samesite='None',secure=True)
+#     #         del response.data['refresh']
+# class CookieTokenObtainPairView(TokenObtainPairView):
     
-    serializer_class = MyTokenObtainPairSerializer
-    def post(self, request, *args, **kwargs):
-        # you need to instantiate the serializer with the request data
-        serializer = self.get_serializer(data=request.data)
-        # you must call .is_valid() before accessing validated_data
-        serializer.is_valid(raise_exception=True)  
+#     serializer_class = MyTokenObtainPairSerializer
+#     def post(self, request, *args, **kwargs):
+#         # you need to instantiate the serializer with the request data
+#         serializer = self.get_serializer(data=request.data)
+#         # you must call .is_valid() before accessing validated_data
+#         serializer.is_valid(raise_exception=True)  
 
-        # get access and refresh tokens to do what you like with
-        access = serializer.validated_data.get("access", None)
-        refresh = serializer.validated_data.get("refresh", None)
-        email = serializer.validated_data.get("email", None)
+#         # get access and refresh tokens to do what you like with
+#         access = serializer.validated_data.get("access", None)
+#         refresh = serializer.validated_data.get("refresh", None)
+#         email = serializer.validated_data.get("email", None)
 
-        # build your response and set cookie
-        if access is not None:
-            response = Response({"access": access, "refresh": refresh, "email": email}, status=200)
-            response.set_cookie('token', access, httponly=True,samesite='None',secure=True)
-            response.set_cookie('refresh', refresh, httponly=True,samesite='None',secure=True)
-            response.set_cookie('email', email,httponly=True,samesite='None',secure=True)
-            return response
+#         # build your response and set cookie
+#         if access is not None:
+#             response = Response({"access": access, "refresh": refresh, "email": email}, status=200)
+#             response.set_cookie('token', access, httponly=True,samesite='None',secure=True)
+#             response.set_cookie('refresh', refresh, httponly=True,samesite='None',secure=True)
+#             response.set_cookie('email', email,httponly=True,samesite='None',secure=True)
+#             return response
 
-        return Response({"Error": "Something went wrong"}, status=400)
+#         return Response({"Error": "Something went wrong"}, status=400)
         
    
-        # return super().finalize_response(request, response, *args, **kwargs)
+#         # return super().finalize_response(request, response, *args, **kwargs)
 
-class CookieTokenRefreshView(TokenRefreshView):
-    def finalize_response(self, request, response, *args, **kwargs):
-        if response.data.get('refresh'):
-            cookie_max_age = 3600 * 24 * 14 # 14 days
-            response.set_cookie('refresh_token', response.data['refresh'], max_age=cookie_max_age, httponly=True  ,samesite='None',secure=True)
-            del response.data['refresh']
-        return super().finalize_response(request, response, *args, **kwargs)
-    serializer_class = CookieTokenRefreshSerializer
+# class CookieTokenRefreshView(TokenRefreshView):
+#     def finalize_response(self, request, response, *args, **kwargs):
+#         if response.data.get('refresh'):
+#             cookie_max_age = 3600 * 24 * 14 # 14 days
+#             response.set_cookie('refresh_token', response.data['refresh'], max_age=cookie_max_age, httponly=True  ,samesite='None',secure=True)
+#             del response.data['refresh']
+#         return super().finalize_response(request, response, *args, **kwargs)
+#     serializer_class = CookieTokenRefreshSerializer
 
 
 class UserIsOwnerOrReadOnly(permissions.BasePermission):

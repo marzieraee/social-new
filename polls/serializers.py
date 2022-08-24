@@ -7,39 +7,38 @@ from .models import *
 
 from rest_framework import serializers
 from django.contrib.auth.models import User
+from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from drf_writable_nested.serializers import WritableNestedModelSerializer
-
-
-class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
-    
-    def validate(self, attrs):
-        # The default result (access/refresh tokens)
-        data = super(CustomTokenObtainPairSerializer, self).validate(attrs)
-        # Custom data you want to include
-        data.update({'username': self.user.username})
-        data.update({'user_id': self.user.id})
-        # and everything else you want to send in the response
-        return data
-
-        
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
-    
-    def validate(self, data):
-        data = super().validate(data)
-        refresh = self.get_token(self.user)
-        data["refresh"] = str(refresh)   # comment out if you don't want this
-        data["access"] = str(refresh.access_token)
-        data["email"] = self.user.email
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
 
-        """ Add extra responses here should you wish
-        data["userid"] = self.user.id
-        data["my_favourite_bird"] = "Jack Snipe"
-        """
-        return data  
+        # Add custom claims
+        token['username'] = user.name
+        # ...
+
+        return token
+    
+    
+
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer
+
+
+
+
+def get_tokens_for_user(user):
+    refresh = RefreshToken.for_user(user)
+
+    return {
+        'refresh': str(refresh),
+        'access': str(refresh.access_token),
+    }
 
             
             
@@ -73,7 +72,7 @@ class UserSerializer(serializers.ModelSerializer):
         
             
         
-class UserEditSerializer(WritableNestedModelSerializer):
+class UserEditSerializer():
         user_related_name=MyUserSerializer()
         
         class Meta:

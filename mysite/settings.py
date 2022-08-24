@@ -17,7 +17,7 @@ from urllib import request
 
 
 
-SECRET_KEY="your-256-bit-secret"
+SECRET_KEY='django-insecure-ysels=g_*p@a)l4lffldup1*a(@mv0irf5nzkt3r4bjfjzu(1o'
 
 
 
@@ -212,17 +212,7 @@ SIMPLE_JWT = {
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': 
         (
-'polls.authenticate.CustomAuthentication',),      
+        'rest_framework_simplejwt.authentication.JWTAuthentication',),      
 }
 
 
-JWT_AUTH = {
-    """
-    I found I did not need to change JWT_PAYLOAD_HANDLER
-    """
-    'JWT_PAYLOAD_HANDLER':
-    'rest_framework_jwt.utils.jwt_payload_handler',
-
-    'JWT_RESPONSE_PAYLOAD_HANDLER':
-    'account.utils.jwt_response_payload_handler',
-}
