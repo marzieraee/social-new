@@ -14,6 +14,14 @@ import os
 from pathlib import Path
 from urllib import request
 
+
+
+
+SECRET_KEY="your-256-bit-secret"
+
+
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -22,7 +30,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-ysels=g_*p@a)l4lffldup1*a(@mv0irf5nzkt3r4bjfjzu(1o'
+# SECRET_KEY = 'django-insecure-ysels=g_*p@a)l4lffldup1*a(@mv0irf5nzkt3r4bjfjzu(1o'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -205,4 +213,16 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': 
         (
 'polls.authenticate.CustomAuthentication',),      
+}
+
+
+JWT_AUTH = {
+    """
+    I found I did not need to change JWT_PAYLOAD_HANDLER
+    """
+    'JWT_PAYLOAD_HANDLER':
+    'rest_framework_jwt.utils.jwt_payload_handler',
+
+    'JWT_RESPONSE_PAYLOAD_HANDLER':
+    'account.utils.jwt_response_payload_handler',
 }
