@@ -193,7 +193,7 @@ class SinglePost(RetrieveAPIView):
    
 
 
-class EditPost(UpdateAPIView):
+class EditPost(RetrieveUpdateDestroyAPIView):
     permission_classes=(IsAuthenticated,)
     queryset = MyPost.objects.all()
     serializer_class = PostUpdateSerializer
