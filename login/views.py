@@ -47,8 +47,8 @@ class MyTokenObtainPairView(TokenObtainPairView):
 
         # build your response and set cookie
         if access is not None:
-            response = Response({"access": access}, status=200)
-            response.set_cookie('refresh', refresh, httponly=True,samesite='None')
+            response = Response({"token": access}, status=200)
+            response.set_cookie('refresh', refresh, httponly=True,samesite='None',secure=True)
             return response
 
         return Response({"Error": "Something went wrong"}, status=400)

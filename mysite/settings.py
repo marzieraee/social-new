@@ -124,6 +124,9 @@ AUTH_PASSWORD_VALIDATORS = [
 
 CORS_ALLOWED_ORIGINS = [
     'https://social-new2.herokuapp.com',
+    'https://social-new2.herokuapp.com:3001',
+    'https://social-new2.herokuapp.com:8000',
+
     'http://localhost:8000',
     'http://localhost:3001',
     "http://localhost:3000",
@@ -142,7 +145,7 @@ CORS_ALLOW_HEADERS = [
     "user-agent",
     "x-csrftoken",
     "x-requested-with",
-]
+]+ ['Set-Cookie']
 
 LANGUAGE_CODE = 'en-us'
 
@@ -203,7 +206,7 @@ SIMPLE_JWT = {
   # custom
   'AUTH_COOKIE':'access_token',  # Cookie name. Enables cookies if value is set.
   'AUTH_COOKIE_DOMAIN': None,     # A string like "example.com", or None for standard domain cookie.
-  'AUTH_COOKIE_SECURE':False,    # Whether the auth cookies should be secure (https:// only).
+  'AUTH_COOKIE_SECURE':True,    # Whether the auth cookies should be secure (https:// only).
   'AUTH_COOKIE_HTTP_ONLY' : True, # Http only cookie flag.It's not fetch by javascript.
   'AUTH_COOKIE_PATH': '/',        # The path of the auth cookie.
   'AUTH_COOKIE_SAMESITE':'Strict',  # Whether to set the flag restricting cookie leaks on cross-site requests. This can be 'Lax', 'Strict', or None to disable the flag.
