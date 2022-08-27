@@ -20,7 +20,6 @@ urlpatterns = [
         path('postsingle/<int:pk>', views.SinglePost.as_view(), name='postsingle'),
         path('createcomment/<int:pk>', views.CreateComment.as_view(), name='createcomment'),
         path('myprofile/<str:username>', views.MyProfile.as_view(), name='changepass'),
-        path('logout/', views.logout.as_view()),
         path('mypost/<str:username>', views.Mypost.as_view(), name='changepass'),
         path('postuser/<str:username>', views.PostByUser.as_view(), name='changepass'),
         path('fallow/', views.FollowingView.as_view(), name='changepass'),

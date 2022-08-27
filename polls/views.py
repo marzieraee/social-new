@@ -251,7 +251,7 @@ class logout(APIView):
        response = Response()
     
 
-       response.delete_cookie('refresh_token')
+       response.delete_cookie('refresh')
        response.data={"masage":"yesss"}
        return response
    

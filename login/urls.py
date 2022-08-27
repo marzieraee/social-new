@@ -14,4 +14,6 @@ urlpatterns = [
     
     path('api/token/',MyTokenObtainPairView.as_view()),
     path('api/token/refresh',CookieTokenRefreshView.as_view()),
+    path('logout/', logout.as_view()),
+
 ]

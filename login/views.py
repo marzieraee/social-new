@@ -13,6 +13,7 @@ from login.utils import *
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework_simplejwt.serializers import TokenRefreshSerializer
 from rest_framework_simplejwt.exceptions import InvalidToken
+from rest_framework.views import APIView
 
 
 
@@ -78,3 +79,16 @@ class CookieTokenRefreshSerializer(TokenRefreshSerializer):
 
 class CookieTokenRefreshView(TokenRefreshView):
     serializer_class = CookieTokenRefreshSerializer
+
+
+class logout(APIView):
+    
+    def post(self,request):
+        
+       response = Response()
+    
+
+       response.delete_cookie('refresh')
+       response.data={"masage":"yesss"}
+       return response
+   
