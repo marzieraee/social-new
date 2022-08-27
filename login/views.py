@@ -11,12 +11,13 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from login.serializers import *
 from login.utils import *
 from django.views.decorators.csrf import csrf_exempt
-
+from rest_framework_simplejwt.serializers import TokenRefreshSerializer
+from rest_framework_simplejwt.exceptions import InvalidToken
 
 
 
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework_simplejwt.views import TokenObtainPairView,TokenRefreshView
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
@@ -53,3 +54,27 @@ class MyTokenObtainPairView(TokenObtainPairView):
 
         return Response({"Error": "Something went wrong"}, status=400)
 
+
+
+class CookieTokenRefreshSerializer(TokenRefreshSerializer):
+    refresh = None
+    def validate(self, attrs):
+        attrs['refresh'] = self.context['request'].COOKIES.get('refresh')
+        if attrs['refresh']:
+            print(attrs['refresh'])
+            return super().validate(attrs)
+        else:
+            raise InvalidToken('No valid token found in cookie \'refresh_token\'')
+
+    # def finalize_response(self, request, response, *args, **kwargs):
+    #     if response.data.get('refresh'):
+    #         cookie_max_age = 3600 * 24 * 14 # 14 days
+    #         response.set_cookie('refresh', response.data['refresh'], max_age=cookie_max_age, httponly=True , samesite='None')
+    #         del response.data['refresh']
+
+
+
+
+
+class CookieTokenRefreshView(TokenRefreshView):
+    serializer_class = CookieTokenRefreshSerializer

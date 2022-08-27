@@ -13,5 +13,5 @@ from django.conf.urls.static import static
 urlpatterns = [
     
     path('api/token/',MyTokenObtainPairView.as_view()),
-    path('api/token/refresh',TokenRefreshSlidingView.as_view()),
+    path('api/token/refresh',CookieTokenRefreshView.as_view()),
 ]
