@@ -244,17 +244,7 @@ class MyProfile(RetrieveUpdateAPIView):
                 return UserEditSerializer
         
         
-class logout(APIView):
-    
-    def post(self,request):
-        
-       response = Response()
-    
 
-       response.delete_cookie('refresh')
-       response.data={"masage":"yesss"}
-       return response
-   
    
    
 # class fallow(CreateAPIView):

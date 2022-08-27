@@ -12,7 +12,7 @@ from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
-
+from drf_writable_nested.serializers import WritableNestedModelSerializer
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
@@ -72,7 +72,7 @@ class UserSerializer(serializers.ModelSerializer):
         
             
         
-class UserEditSerializer():
+class UserEditSerializer(WritableNestedModelSerializer):
         user_related_name=MyUserSerializer()
         
         class Meta:
