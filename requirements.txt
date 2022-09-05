@@ -5,7 +5,7 @@ Django_Verify_Email==2.0.3
 Jinja2==3.1.2
 MarkupSafe==2.1.1
 Pillow==9.2.0
-PyJWT==1.5.2
+PyJWT==2.0.0
 asgiref==3.5.2
 backports.zoneinfo==0.2.1
 certifi==2022.6.15
@@ -21,7 +21,6 @@ django_simple_email_confirmation==0.70
 django_templated_mail==1.1.1
 djangorestframework==3.13.1
 djangorestframework_api_key==2.2.0
-djangorestframework_jwt==1.11.0
 djangorestframework_simplejwt==4.8.0
 djoser==2.1.0
 drf_writable_nested==0.7.0
