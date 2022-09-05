@@ -1,0 +1,18 @@
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [example.com] Please Confirm Your E-mail Address
+From: formydjango@gmail.com
+To: raeemarzie@yahoo.com
+Date: Wed, 31 Aug 2022 05:56:24 -0000
+Message-ID: <166192538472.8137.3958978314412911347@marzieh-Lenovo-V130-15IKB>
+
+Hello from example.com!
+
+You're receiving this e-mail because user gfgf has given your e-mail address to register an account on example.com.
+
+To confirm this is correct, go to http://127.0.0.1:8000/dj-rest-auth/registration/account-confirm-email/MzY:1oTGi8:DFfku8Nx7p36c8qjZx5FmowGj6SwQgIafI5Nwq3Cdu0/
+
+Thank you for using example.com!
+example.com
+-------------------------------------------------------------------------------

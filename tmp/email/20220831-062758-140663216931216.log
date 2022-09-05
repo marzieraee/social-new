@@ -1,0 +1,18 @@
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [example.com] Please Confirm Your E-mail Address
+From: Verified-email <verified-ses-email@example.com>
+To: marzyra1997@gmail.com
+Date: Wed, 31 Aug 2022 06:27:58 -0000
+Message-ID: <166192727802.11040.6480059699353847528@marzieh-Lenovo-V130-15IKB>
+
+Hello from example.com!
+
+You're receiving this e-mail because user df has given your e-mail address to register an account on example.com.
+
+To confirm this is correct, go to http://127.0.0.1:8000/dj-rest-auth/registration/account-confirm-email/NDM:1oTHCg:OtavN00pqhOovPZQB8OArxH86oy79O1v6z77oYOHv2M/
+
+Thank you for using example.com!
+example.com
+-------------------------------------------------------------------------------

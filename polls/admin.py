@@ -4,6 +4,4 @@ from django.contrib import admin
 from polls.models import *
 
 
-admin.site.register(MyUser)
-admin.site.register(MyPost)
-admin.site.register(Comment)
+# admin.site.register(MyUser)
