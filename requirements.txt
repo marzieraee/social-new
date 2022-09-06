@@ -15,7 +15,6 @@ django-templated-mail==1.1.1
 Django-Verify-Email==2.0.3
 djangorestframework==3.13.1
 djangorestframework-api-key==2.2.0
-djangorestframework-jwt==1.11.0
 djangorestframework-simplejwt==4.8.0
 djoser==2.1.0
 drf-writable-nested==0.7.0
