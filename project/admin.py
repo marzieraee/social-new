@@ -83,3 +83,4 @@ admin.site.unregister(Group)
 
 admin.site.register(MyPost)
 admin.site.register(Comment)
+admin.site.register(ProfileFallow)

@@ -1,11 +1,13 @@
+from cgitb import lookup
+import profile
 from django.shortcuts import render
 from requests import request
 from .serializers import *
 from .permisions import *
+from .models import *
 from rest_framework.generics import RetrieveAPIView,UpdateAPIView,CreateAPIView,RetrieveUpdateAPIView,ListAPIView,ListCreateAPIView,RetrieveUpdateDestroyAPIView
 from rest_framework.views import APIView
 from rest_framework import status, viewsets
-from rest_framework.decorators import action
 
 
 
@@ -120,4 +122,29 @@ class PostByUser(ListAPIView):
  
         return queryset
      
-     
+
+class FollowView(viewsets.ViewSet):
+    queryset = ProfileFallow.objects.all()
+    lookup_field='username'
+
+    def follow(self, request, pk):
+        own_profile = ProfileFallow.objects.get(myprofile=request.user)
+        following_profile =CustomUser.objects.get(id=pk)
+        own_profile.following.add(following_profile)        
+        
+        return Response({'message': 'now you are following'}, status=status.HTTP_200_OK)
+
+    def unfollow(self, request, pk):
+        own_profile = request.user.myprofile.first()
+        following_profile = CustomUser.objects.get(id=pk)
+        own_profile.following.remove(following_profile)
+        return Response({'message': 'you are no longer following him'}, status=status.HTTP_200_OK)
+    
+    def follower(self, request,pk):
+        user = CustomUser.objects.get(id=pk)
+        count=ProfileFallow.objects.get(myprofile=user).following.count()
+        print(count,'aaaaaaaaaaaaaaaaaaaaaaaaaaa')
+        return Response(count,status=200)
+        
+        
+        

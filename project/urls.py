@@ -8,6 +8,7 @@ from . import views
 
 
 
+
 urlpatterns = [
           path('register/verifycod/', views.VerifyEmail.as_view(), name='verifyemail'),
 
@@ -28,7 +29,9 @@ urlpatterns = [
         path('postuser/<str:username>', views.PostByUser.as_view(), name='changepass'),
 #         path('fallow/', views.FollowingView.as_view(), name='changepass'),
         
-
+        path('follow/<int:pk>/', views.FollowView.as_view({'post': 'follow'})),
+        path('unfollow/<int:pk>/', views.FollowView.as_view({'post': 'unfollow'})),
+        path('follower/<int:pk>/', views.FollowView.as_view({'get': 'follower'})),
 
 
         

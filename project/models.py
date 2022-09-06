@@ -45,13 +45,13 @@ class MyUserManager(BaseUserManager):
 
 
 class CustomUser(AbstractBaseUser):
-   username=models.CharField(max_length=20)
+   username=models.CharField(max_length=20,unique=True)
    image=models.ImageField(default='profile/x22.png',upload_to='profile/')
    bio=models.TextField(default='hi',null=True)
    cod=models.CharField(max_length=20,null=True)
    is_active=models.BooleanField(default=False)
    
-   USERNAME_FIELD = 'email'
+   USERNAME_FIELD = 'username'
    email = models.EmailField(
         verbose_name='email address',
         max_length=255,
@@ -64,7 +64,7 @@ class CustomUser(AbstractBaseUser):
 
    
    def __str__(self):
-        return self.email
+        return self.username
 
    def has_perm(self, perm, obj=None):
         "Does the user have a specific permission?"
@@ -109,3 +109,8 @@ class Comment(models.Model):
     commenter = models.ForeignKey(CustomUser,on_delete=models.CASCADE,related_name='comments',null=True)
     body = models.TextField()
     created_on = models.DateTimeField(auto_now_add=True)
+    
+    
+class ProfileFallow(models.Model):
+    myprofile=models.ForeignKey(CustomUser, on_delete=models.CASCADE,related_name='myprofile')
+    following=models.ManyToManyField(CustomUser,related_name='fallowing')
