@@ -1,1 +1,1 @@
-web: gunicorn mysite.wsgi --log-file -
+web: lein run -m demo.web $PORT
