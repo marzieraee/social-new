@@ -236,8 +236,6 @@ REST_FRAMEWORK = {
         (
          'rest_framework_simplejwt.authentication.JWTAuthentication',),      
 }
-REST_USE_JWT = True
-JWT_AUTH_COOKIE = 'my-app-auth'
 # SENDGRID_API_KEY = os.getenv('SENDGRID_API_KEY')
 
 # EMAIL_HOST_PASSWORD = SENDGRID_API_KEY
