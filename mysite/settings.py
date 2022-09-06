@@ -249,7 +249,6 @@ AUTH_USER_MODEL = 'project.CustomUser'
 # EMAIL_HOST_USER = 'shimana@shimafa.ir'
 # EMAIL_HOST_PASSWORD = 'Shima13691370'
 
-LOGIN_URL = 'http://127.0.0.1:8000/login/api/token/'
 
 
 ACCOUNT_USERNAME_REQUIRED = False
