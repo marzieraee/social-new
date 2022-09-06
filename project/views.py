@@ -1,7 +1,4 @@
-from cgitb import lookup
 import profile
-from django.shortcuts import render
-from requests import request
 from .serializers import *
 from .permisions import *
 from .models import *

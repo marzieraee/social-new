@@ -9,12 +9,8 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
-
-from distutils import config
 import os
 from pathlib import Path
-from urllib import request
-
 
 
 
@@ -175,7 +171,6 @@ MEDIA_URL = '/media/'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 import datetime
 from datetime import timedelta
 
@@ -216,54 +211,25 @@ SIMPLE_JWT = {
 }
 
 
-# DJOSER = {
-#     'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}',
-#     'USERNAME_RESET_CONFIRM_URL': '#/username/reset/confirm/{uid}/{token}',
-#     'ACTIVATION_URL': '#/activate/{uid}/{token}',
-#     'SEND_ACTIVATION_EMAIL': True,
-#     'SERIALIZERS': {},
-# }
-
-# REST_AUTH_REGISTER_SERIALIZERS = {
-#     'REGISTER_SERIALIZER': 'project.serializers.CustomRegisterSerializer',
-# }
-
-# ACCOUNT_EMAIL_VERIFICATION ="mandatory"
-# ACCOUNT_CONFIRM_EMAIL_ON_GET = True
-
+#
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': 
         (
          'rest_framework_simplejwt.authentication.JWTAuthentication',),      
 }
-# SENDGRID_API_KEY = os.getenv('SENDGRID_API_KEY')
 
-# EMAIL_HOST_PASSWORD = SENDGRID_API_KEY
 AUTH_USER_MODEL = 'project.CustomUser'
-# EMAIL_BACKEND ='django.core.mail.backends.console.EmailBackend
-# EMAIL_HOST = 'mail.shimafa.ir'
-# EMAIL_PORT = 465
-# EMAIL_USE_TLS = True
-# EMAIL_HOST_USER = 'shimana@shimafa.ir'
-# EMAIL_HOST_PASSWORD = 'Shima13691370'
-
 
 
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_HOST = 'smtp.gmail.com'
-# EMAIL_USE_TLS = True
-# EMAIL_USE_SSL = False
-# EMAIL_PORT = 45848
-# EMAIL_HOST_USER = 'formydjango@gmail.com'
-# EMAIL_HOST_PASSWORD = 'jrsnfimijfoxcfdi'
-
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.cloudmta.net'
+EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'e7d6dea731b2f948'
-EMAIL_HOST_PASSWORD = '1KkCQUAMLpQjaYxVf6oF75Qp'
+EMAIL_HOST_USER = 'formydjango@gmail.com'
+EMAIL_HOST_PASSWORD = 'jrsnfimijfoxcfdi'
+
