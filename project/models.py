@@ -51,7 +51,7 @@ class CustomUser(AbstractBaseUser):
    cod=models.CharField(max_length=20,null=True)
    is_active=models.BooleanField(default=False)
    
-   USERNAME_FIELD = 'username'
+   USERNAME_FIELD = 'email'
    email = models.EmailField(
         verbose_name='email address',
         max_length=255,
