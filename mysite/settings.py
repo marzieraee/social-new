@@ -231,5 +231,5 @@ EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'formydjango@gmail.com'
-EMAIL_HOST_PASSWORD = 'uzqahqewvrhvkxzr'
+EMAIL_HOST_PASSWORD = 'bsxdbwmuvipcbvgg'
 
