@@ -53,6 +53,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'polls',
     'project',
+    'storages',
+    
+    
 
     
 ]
@@ -233,3 +236,10 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = 'formydjango@gmail.com'
 EMAIL_HOST_PASSWORD = 'bsxdbwmuvipcbvgg'
 
+
+DEFAULT_FILE_STORAGE = 'storages.backends.dropbox.DropBoxStorage'
+DROPBOX_OAUTH2_TOKEN='sl.BOztHZxSQ7fN-_7DWQrKVlVTcSAAqF3-cWyedcAuSxRgipSpExi_mznHrJ1RwawKF_y1R6J_IFt1mub5H3DlP80fnx9IB5Ut5y__ZCtKwwe2dvve0f17Pp-09d22KDz-Cw5CoO4a6Ww'
+DROPBOX_APP_KEY='fodunl56jaz6wqj'
+DROPBOX_ROOT_PATH='/'
+# DROPBOX_APP_SECRET=
+# DROPBOX_OAUTH2_REFRESH_TOKEN=

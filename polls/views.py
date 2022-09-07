@@ -1,8 +1,6 @@
-from .models import *
 # # Create your views here.
 # from .serializers import *
 # from rest_framework.views import APIView
-from rest_framework.generics import RetrieveAPIView,UpdateAPIView,CreateAPIView,RetrieveUpdateAPIView,ListAPIView,ListCreateAPIView,RetrieveUpdateDestroyAPIView
 # # from .paginations import * 
 # from rest_framework_simplejwt.tokens import RefreshToken
 # from rest_framework.response import Response
