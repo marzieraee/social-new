@@ -20,3 +20,4 @@ djangorestframework==3.13.1
 social_auth_app_django==4.0.0
 social_auth_core==4.3.0
 dropbox==11.34.0
+django-storages==1.13.1
