@@ -12,7 +12,7 @@ from . import views
 urlpatterns = [
           path('register/verifycod/', views.VerifyEmail.as_view(), name='verifyemail'),
 
-#         path('', views.PostList.as_view(), name='postlistapi'),
+        path('', views.Home.as_view(), name='postlistapi'),
         path('register/', views.SignUp.as_view(), name='register'),
         path('profile/<str:username>', views.ShowEditDelProfile.as_view(), name='profile'),
 #         path('editprofile/<str:username>', views.EditProfile.as_view(), name='profile'),

@@ -16,7 +16,7 @@ class UserCreationForm(forms.ModelForm):
 
     class Meta:
         model = CustomUser
-        fields = ('email', 'cod','image','bio',)
+        fields = ('email', 'cod','image','bio','username')
 
     def clean_password2(self):
         # Check that the two password entries match
@@ -55,7 +55,7 @@ class UserAdmin(BaseUserAdmin):
     # The fields to be used in displaying the User model.
     # These override the definitions on the base UserAdmin
     # that reference specific fields on auth.User.
-    list_display = ('email', 'cod','image','bio','username', 'is_admin')
+    list_display = ('email', 'cod','image','bio','username', 'is_admin',)
     list_filter = ('is_admin',)
     fieldsets = (
         (None, {'fields': ('email', 'password')}),

@@ -1,11 +1,12 @@
 import profile
+
+from rest_framework.response import Response
 from .serializers import *
 from .permisions import *
 from .models import *
 from rest_framework.generics import RetrieveAPIView,UpdateAPIView,CreateAPIView,RetrieveUpdateAPIView,ListAPIView,ListCreateAPIView,RetrieveUpdateDestroyAPIView
 from rest_framework.views import APIView
 from rest_framework import status, viewsets
-
 
 
 
@@ -119,16 +120,39 @@ class PostByUser(ListAPIView):
  
         return queryset
      
+     
+class Home(ListAPIView):
+    
+    
+    
+    serializer_class = PostSerializer
+    
+    def get_queryset(self):
+        
+        own_profile = self.request.user.myprofile.first()
+        myfollowing=own_profile.following.all()
+        
+        return MyPost.objects.filter(author__in=myfollowing)
+    
+    
+class Explore(ListAPIView):
+    
+    
+
+    serializer_class = PostSerializer
+    
+        
+    MyPost.objects.all()
+   
+    
 
 class FollowView(viewsets.ViewSet):
     queryset = ProfileFallow.objects.all()
-    lookup_field='username'
 
     def follow(self, request, pk):
         own_profile = ProfileFallow.objects.get(myprofile=request.user)
         following_profile =CustomUser.objects.get(id=pk)
         own_profile.following.add(following_profile)        
-        
         return Response({'message': 'now you are following'}, status=status.HTTP_200_OK)
 
     def unfollow(self, request, pk):
@@ -141,7 +165,7 @@ class FollowView(viewsets.ViewSet):
         user = CustomUser.objects.get(id=pk)
         count=ProfileFallow.objects.get(myprofile=user).following.count()
         print(count,'aaaaaaaaaaaaaaaaaaaaaaaaaaa')
-        return Response(count,status=200)
+        return Response({count},status=status.HTTP_200_OK)
         
         
         
