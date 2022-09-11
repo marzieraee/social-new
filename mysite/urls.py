@@ -40,5 +40,5 @@ urlpatterns = [
     #     VerifyEmailView.as_view(),
     #     name='account_email_verification_sent'
     # ),
-]
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
