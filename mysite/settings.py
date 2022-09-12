@@ -238,18 +238,18 @@ EMAIL_HOST_PASSWORD = 'isxnxtbqdchdfaql'
 
 
 DEFAULT_FILE_STORAGE = 'storages.backends.dropbox.DropBoxStorage'
-DROPBOX_OAUTH2_TOKEN='sl.BPGHvQqc_X5PVaOkpF8mThEFQ5-t5mehxndu9mkcZWtrYlKbHuti_daSEryCQLEuF6aG6txJTZ6HX51pAYPGZW2JDAwxuHj97Dz4idBAOjAp4ZCTn6R_MQyFxCruMBq1AmGNnj-PuCk'
+DROPBOX_OAUTH2_TOKEN='sl.BPLFqFOD1fCxoMILD0NTfP-ttZM2TXhHIOOJb-J91mq6ZK8NqT5CuQm8bHMp8bUR1HYwj9frDim0vn0NNM3XSBTNIODo8F2BpE0MqdECsCy_vc5hth9gC4CWY1WOCRUzM91z2S6DyCI'
 DROPBOX_APP_KEY='fodunl56jaz6wqj'
-DROPBOX_ROOT_PATH='/'
+# # DROPBOX_ROOT_PATH='/'
 DROPBOX_APP_SECRET='hxsmaesom8i7dib'
-AUTHORIZATION_CODE='-FrUu6Zx4_MAAAAAAAAAIMijN9Ya-Gef96V-Cv_qdKU'
+AUTHORIZATION_CODE='-FrUu6Zx4_MAAAAAAAAAKGW0ZRolBus_xbOk997hazo'
 
-oauth2_refresh_token ={
-    "access_token": "sl.BPEZt4eQWLiAV9p5lt88_3S3PNINB2VSt9b2LSZmODh8nfmBdTVjNz5ZnWIEzsrcoRykcPAjjrjN_GcvbWkeng5uKYSgBDz9Qwq-BIXRHmPD2Cf3JOhnCtufKK_2gAqx6QO5l3ceyNM",
+oauth2_refresh_token ={"access_token": "sl.BPLFqFOD1fCxoMILD0NTfP-ttZM2TXhHIOOJb-J91mq6ZK8NqT5CuQm8bHMp8bUR1HYwj9frDim0vn0NNM3XSBTNIODo8F2BpE0MqdECsCy_vc5hth9gC4CWY1WOCRUzM91z2S6DyCI",
     "token_type": "bearer",
     "expires_in": 14400,
-    "refresh_token": "krRFmkdIFuAAAAAAAAAAAci4nqhrYGczos3JIIfmO7rOPyoNKmfX5dPioJvSaEZK",
+    "refresh_token": "O5eczY0ZGb4AAAAAAAAAAaiFAsEfsIuPCTbyaE-33TW7gfgkK7_COv_GKlii-pHl",
     "scope": "account_info.read account_info.write files.content.read files.content.write files.metadata.read files.metadata.write",
     "uid": "1387534145",
-    "account_id": "dbid:AAB4STBskDzO2qKI0V7lmlcY4DBWAUxXvZs"
-} 
+    "account_id": "dbid:AAB4STBskDzO2qKI0V7lmlcY4DBWAUxXvZs"}
+# # dbx = dropbox.Dropbox('sl.BPEZt4eQWLiAV9p5lt88_3S3PNINB2VSt9b2LSZmODh8nfmBdTVjNz5ZnWIEzsrcoRykcPAjjrjN_GcvbWkeng5uKYSgBDz9Qwq-BIXRHmPD2Cf3JOhnCtufKK_2gAqx6QO5l3ceyNM')
+# # dbx.users_get_current_account()

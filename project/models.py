@@ -94,7 +94,7 @@ class MyPost(models.Model):
     author=models.ForeignKey(CustomUser,on_delete=models.CASCADE,related_name='related_name')
     user_likes = models.ManyToManyField(CustomUser,related_name='userlike',blank=True)
     title=models.CharField(max_length=200)
-    image = models.ImageField(upload_to='posts/',null=True)
+    image = models.ImageField(default='profile/x22.png',upload_to='posts/',null=True)
     content=models.TextField(max_length=1000)
     likes = models.PositiveIntegerField(default=0) 
     created_date=models.DateTimeField(auto_now_add=True)
