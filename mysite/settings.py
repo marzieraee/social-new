@@ -166,7 +166,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 
 
-MEDIA_ROOT =os.path.join(BASE_DIR, 'media')
+# MEDIA_ROOT =os.path.join(BASE_DIR, 'media')
 
 MEDIA_URL = '/media/'
 
@@ -234,27 +234,22 @@ EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'formydjango@gmail.com'
-EMAIL_HOST_PASSWORD = 'bsxdbwmuvipcbvgg'
+EMAIL_HOST_PASSWORD = 'isxnxtbqdchdfaql'
 
 
-# DEFAULT_FILE_STORAGE = 'storages.backends.dropbox.DropBoxStorage'
-# DROPBOX_OAUTH2_TOKEN='sl.BO3eIaeEdu_rmOEayHYWnlXgfmBUgBdFsioOj6KTK7yQYag3qiitx6yFKc2v5SiCJEXRdxLW0PfcOyhoyT-a4xElWr9f58chCMGTmCPrJ9JuDpoenGGKAiGPvpUQKMHL7BJ9eDBN4q0'
-# DROPBOX_APP_KEY='fodunl56jaz6wqj'
-# DROPBOX_ROOT_PATH='/'
-# DROPBOX_APP_SECRET='hxsmaesom8i7dib'
-# AUTHORIZATION_CODE='-FrUu6Zx4_MAAAAAAAAAIMijN9Ya-Gef96V-Cv_qdKU'
+DEFAULT_FILE_STORAGE = 'storages.backends.dropbox.DropBoxStorage'
+DROPBOX_OAUTH2_TOKEN='sl.BPGHvQqc_X5PVaOkpF8mThEFQ5-t5mehxndu9mkcZWtrYlKbHuti_daSEryCQLEuF6aG6txJTZ6HX51pAYPGZW2JDAwxuHj97Dz4idBAOjAp4ZCTn6R_MQyFxCruMBq1AmGNnj-PuCk'
+DROPBOX_APP_KEY='fodunl56jaz6wqj'
+DROPBOX_ROOT_PATH='/'
+DROPBOX_APP_SECRET='hxsmaesom8i7dib'
+AUTHORIZATION_CODE='-FrUu6Zx4_MAAAAAAAAAIMijN9Ya-Gef96V-Cv_qdKU'
 
-# DROPBOX_OAUTH2_REFRESH_TOKEN=hxsmaesom8i7dib
-
-ds={
-    "access_token": "sl.BPDHWMEbDgNoOsGpE-VTJ5i13royTnOyHbtfx4ZyIF1TEdlC6jqNK1dYsZ-P8p-2asxwxYWMfDpn__T6UKcS2UY7HjF4iQU548OYPXC-04WykJtW3rtMbjHytkIR6wkNHDqQYPT_pYM",
+oauth2_refresh_token ={
+    "access_token": "sl.BPEZt4eQWLiAV9p5lt88_3S3PNINB2VSt9b2LSZmODh8nfmBdTVjNz5ZnWIEzsrcoRykcPAjjrjN_GcvbWkeng5uKYSgBDz9Qwq-BIXRHmPD2Cf3JOhnCtufKK_2gAqx6QO5l3ceyNM",
     "token_type": "bearer",
     "expires_in": 14400,
-    "refresh_token": "qebOI_KOthcAAAAAAAAAAQJnDPoPi-c1g_kA3sMvjd9rlkplOIjrmPAo1xcIalZs",
+    "refresh_token": "krRFmkdIFuAAAAAAAAAAAci4nqhrYGczos3JIIfmO7rOPyoNKmfX5dPioJvSaEZK",
     "scope": "account_info.read account_info.write files.content.read files.content.write files.metadata.read files.metadata.write",
     "uid": "1387534145",
     "account_id": "dbid:AAB4STBskDzO2qKI0V7lmlcY4DBWAUxXvZs"
-}
-
-dbx = dropbox.Dropbox(app_key ='fodunl56jaz6wqj',app_secret ='hxsmaesom8i7dib',
-oauth2_refresh_token =ds )
+} 
