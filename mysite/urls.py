@@ -27,7 +27,7 @@ urlpatterns = [
     # path('polls/', include('polls.urls')),
     path('polls/', include('project.urls')),
 
-    path('login/', include('login.urls')),
+    path('account/', include('login.urls')),
     # path('dj-rest-auth/', include('dj_rest_auth.urls')) ,
     # path('dj-rest-auth/', include('dj_rest_auth.urls')),
     # path(

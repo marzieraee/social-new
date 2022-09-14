@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'polls',
     'project',
     'storages',
+    'login',
     
     
 
@@ -221,7 +222,7 @@ REST_FRAMEWORK = {
          'rest_framework_simplejwt.authentication.JWTAuthentication',),      
 }
 
-AUTH_USER_MODEL = 'project.CustomUser'
+AUTH_USER_MODEL = 'login.CustomUser'
 
 
 ACCOUNT_USERNAME_REQUIRED = False
@@ -238,18 +239,18 @@ EMAIL_HOST_PASSWORD = 'isxnxtbqdchdfaql'
 
 
 DEFAULT_FILE_STORAGE = 'storages.backends.dropbox.DropBoxStorage'
-DROPBOX_OAUTH2_TOKEN='sl.BPLFqFOD1fCxoMILD0NTfP-ttZM2TXhHIOOJb-J91mq6ZK8NqT5CuQm8bHMp8bUR1HYwj9frDim0vn0NNM3XSBTNIODo8F2BpE0MqdECsCy_vc5hth9gC4CWY1WOCRUzM91z2S6DyCI'
+DROPBOX_OAUTH2_TOKEN='sl.BPOocd9t6Fz_URp79BfHPdcJkht5sKSvwB8MhCuzXEVEcFOjEJ05opRtj7uTafw7fygA4j-5R0XO_PX8S30HEP0K73eONldE6kEAUGxK103ftgKwZIGadun7Ab-pf_jE7397Sd4-9Ks'
 DROPBOX_APP_KEY='fodunl56jaz6wqj'
 # # DROPBOX_ROOT_PATH='/'
 DROPBOX_APP_SECRET='hxsmaesom8i7dib'
 AUTHORIZATION_CODE='-FrUu6Zx4_MAAAAAAAAAKGW0ZRolBus_xbOk997hazo'
 
-oauth2_refresh_token ={"access_token": "sl.BPLFqFOD1fCxoMILD0NTfP-ttZM2TXhHIOOJb-J91mq6ZK8NqT5CuQm8bHMp8bUR1HYwj9frDim0vn0NNM3XSBTNIODo8F2BpE0MqdECsCy_vc5hth9gC4CWY1WOCRUzM91z2S6DyCI",
-    "token_type": "bearer",
-    "expires_in": 14400,
-    "refresh_token": "O5eczY0ZGb4AAAAAAAAAAaiFAsEfsIuPCTbyaE-33TW7gfgkK7_COv_GKlii-pHl",
-    "scope": "account_info.read account_info.write files.content.read files.content.write files.metadata.read files.metadata.write",
-    "uid": "1387534145",
-    "account_id": "dbid:AAB4STBskDzO2qKI0V7lmlcY4DBWAUxXvZs"}
+# oauth2_refresh_token ={"access_token": "sl.BPLFqFOD1fCxoMILD0NTfP-ttZM2TXhHIOOJb-J91mq6ZK8NqT5CuQm8bHMp8bUR1HYwj9frDim0vn0NNM3XSBTNIODo8F2BpE0MqdECsCy_vc5hth9gC4CWY1WOCRUzM91z2S6DyCI",
+#     "token_type": "bearer",
+#     "expires_in": 14400,
+#     "refresh_token": "O5eczY0ZGb4AAAAAAAAAAaiFAsEfsIuPCTbyaE-33TW7gfgkK7_COv_GKlii-pHl",
+#     "scope": "account_info.read account_info.write files.content.read files.content.write files.metadata.read files.metadata.write",
+#     "uid": "1387534145",
+#     "account_id": "dbid:AAB4STBskDzO2qKI0V7lmlcY4DBWAUxXvZs"}
 # # dbx = dropbox.Dropbox('sl.BPEZt4eQWLiAV9p5lt88_3S3PNINB2VSt9b2LSZmODh8nfmBdTVjNz5ZnWIEzsrcoRykcPAjjrjN_GcvbWkeng5uKYSgBDz9Qwq-BIXRHmPD2Cf3JOhnCtufKK_2gAqx6QO5l3ceyNM')
 # # dbx.users_get_current_account()
