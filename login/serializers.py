@@ -33,6 +33,8 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         # Add custom claims
         token['name'] = user.username
         # ...
+        return token
+    
 class CookieTokenRefreshSerializer(TokenRefreshSerializer):
     refresh = None
     def validate(self, attrs):
@@ -43,7 +45,6 @@ class CookieTokenRefreshSerializer(TokenRefreshSerializer):
         else:
             raise InvalidToken('No valid token found in cookie \'refresh_token\'')
         
-
 
 
 User = get_user_model()
