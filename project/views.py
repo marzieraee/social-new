@@ -56,22 +56,27 @@ class PostView(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         own_profile = self.request.user.myprofile.first()
         myfollowing=own_profile.following.all()
-        qs=MyPost.objects.filter(author__in=myfollowing)
+        route=request.query_params["route"]
+        if route=="home":
+            qs=MyPost.objects.filter(author__in=myfollowing)
+        elif route=="explore": 
+            qs=MyPost.objects.exclude(author__in=myfollowing)
+            
         page = self.paginate_queryset(qs)
         if page is not None:
             serializer = self.get_serializer(page, many = True)
         return self.get_paginated_response(serializer.data)
-        
+            
     
-    @action(detail=False, methods=['get'])
-    def explore(self, request, pk=None):
-        own_profile = self.request.user.myprofile.first()
-        myfollowing=own_profile.following.all()
-        qs=MyPost.objects.all().exclude(author__in=myfollowing)
-        page = self.paginate_queryset(qs)
-        if page is not None:
-            serializer = self.get_serializer(page, many = True)
-        return self.get_paginated_response(serializer.data)
+    # @action(detail=False, methods=['get'])
+    # def explore(self, request, pk=None):
+    #     own_profile = self.request.user.myprofile.first()
+    #     myfollowing=own_profile.following.all()
+    #     qs=MyPost.objects.all().exclude(author__in=myfollowing)
+    #     page = self.paginate_queryset(qs)
+    #     if page is not None:
+    #         serializer = self.get_serializer(page, many = True)
+    #     return self.get_paginated_response(serializer.data)
 
     
     @action(detail=True, methods=['post','get'])

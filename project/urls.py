@@ -7,7 +7,7 @@ from . import views
 
 
 router=SimpleRouter()
-router.register('',views.PostView)
+router.register('',views.PostView,basename='posts')
 commentrouter=SimpleRouter()
 commentrouter.register('comment',views.CommentView)
 
