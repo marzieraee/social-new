@@ -61,7 +61,8 @@ class PostView(viewsets.ModelViewSet):
             qs=MyPost.objects.filter(author__in=myfollowing)
         elif route=="explore": 
             qs=MyPost.objects.exclude(author__in=myfollowing)
-            
+        else:
+            qs=MyPost.objects.all()
         page = self.paginate_queryset(qs)
         if page is not None:
             serializer = self.get_serializer(page, many = True)
