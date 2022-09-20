@@ -1,109 +1,105 @@
-import profile
+from requests import request
 
 from rest_framework.response import Response
+
+from project.paginations import StandardPagination,StandardcommentPagination
 from .serializers import *
 from .permisions import *
 from .models import *
 from rest_framework.generics import RetrieveAPIView,UpdateAPIView,DestroyAPIView, CreateAPIView,RetrieveUpdateAPIView,ListAPIView,ListCreateAPIView,RetrieveUpdateDestroyAPIView
 from rest_framework.views import APIView
 from rest_framework import status, viewsets
+from rest_framework.decorators import action
 
 
+class CommentView(viewsets.ModelViewSet):
+    serializer_class=CommentSerializer
+    queryset = Comment.objects.all()
+    pagination_class=StandardcommentPagination
 
-
-
-
-
-    
-    
-    
-    
-class ShowEditDelPost(RetrieveUpdateDestroyAPIView) :
-    queryset = MyPost.objects.all()
-
-    serializer_class = PostSerializer
-    
-    # permission_classes=(IsAuthenticated,UserIsOwnerOrReadOnly)
-    def get_queryset(self):
-        super().get_queryset()
-        if self.request.method=='GET':
-               queryset = MyPost.objects.all()
-        else:
-               queryset = MyPost.objects.filter(author=self.request.user)
- 
-        return queryset
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context.update({"request": self.request,"pk":self.kwargs["pk"]})
+        return context
     
     def get_permissions(self):
+        if self.request.method == 'POST':
+            permission_classes = [IsAuthenticated]
+        elif self.request.method == 'PATCH' or 'DELETE':
+            permission_classes = [IsAuthenticated,UserIsOwnerCommentOrReadOnly]
+            
+        return [permission() for permission in permission_classes]
         
-        if self.request.method in permissions.SAFE_METHODS:
-             return (permissions.AllowAny(),)
-        return (IsAuthenticated(), UserIsOwnerPostOrReadOnly(),)
     
-    
-    
-class CreatePost(CreateAPIView):
-    serializer_class=PostSerializer
-    permission_classes=(IsAuthenticated,)
-    
+
 
 
 
 class PostByUser(ListAPIView):
-    lookup_field='username'
-    queryset = MyPost.objects.all()
-
+    lookup_field = 'username'
     serializer_class = PostSerializer
-    def get_queryset(self):
-        super().get_queryset()
-        username=self.kwargs['username']
-        
-        queryset = MyPost.objects.filter(author__username=username)
- 
-        return queryset
-     
-     
-class Home(ListAPIView):
-    
-    
-    queryset = MyPost.objects.all()
+    permission_classes=(IsAuthenticated,)
+    pagination_class=StandardPagination
 
-    serializer_class = PostSerializer
-    
-    def get_queryset(self):
+    queryset = MyPost.objects.all()
+    def get_queryset(self,*args, **kwargs):
+        qs=super().get_queryset()
         
+        return qs.filter(author__username=self.kwargs['username'])        
+    
+    
+class PostView(viewsets.ModelViewSet):
+    serializer_class=PostSerializer
+    queryset = MyPost.objects.all()
+    pagination_class=StandardPagination
+    
+    def list(self, request, *args, **kwargs):
         own_profile = self.request.user.myprofile.first()
         myfollowing=own_profile.following.all()
+        qs=MyPost.objects.filter(author__in=myfollowing)
+        page = self.paginate_queryset(qs)
+        if page is not None:
+            serializer = self.get_serializer(page, many = True)
+        return self.get_paginated_response(serializer.data)
         
-        return MyPost.objects.filter(author__in=myfollowing)
     
-    
-class Explore(ListAPIView):
-    
-    
+    @action(detail=False, methods=['get'])
+    def explore(self, request, pk=None):
+        own_profile = self.request.user.myprofile.first()
+        myfollowing=own_profile.following.all()
+        qs=MyPost.objects.all().exclude(author__in=myfollowing)
+        page = self.paginate_queryset(qs)
+        if page is not None:
+            serializer = self.get_serializer(page, many = True)
+        return self.get_paginated_response(serializer.data)
 
-    serializer_class = PostSerializer
     
+    @action(detail=True, methods=['post','get'])
+    def like(self, request,pk):
+        obj=self.get_object()
+        if request.method=='POST':
+            try: 
+                MyPost.objects.get(user_likes=request.user)
+                obj.user_likes.remove(request.user)
+                return Response({"REMOVED"})
+            except MyPost.DoesNotExist:
+                obj.user_likes.add(request.user)
+                return Response({"LIKED"})
+                
+        else:
+            try: 
+                user_like=obj.user_likes.all()
+                serializer=UserProfileSerializer(user_like,many=True)
+                return Response(serializer.data)
+            except MyPost.DoesNotExist:
+                return Response({''})            
+            
+    def get_permissions(self):
+        if self.action == 'list' or self.request.method == 'POST':
+            permission_classes = [IsAuthenticated]
+        elif self.request.method == 'PATCH' or 'DELETE':
+            permission_classes = [UserIsOwnerPostOrReadOnly]
+            
+        return [permission() for permission in permission_classes]
         
-    MyPost.objects.all()
-   
-    
-
-
-        
-class CreateComment(CreateAPIView):
-    serializer_class=CommentSerializer
-# permission_classes=(IsAuthenticated,)
-    def perform_create(self,serializer):
-        serializer.save(commenter=self.request.user,post_id=self.kwargs['pk'])
-    
-    
-    
-class DeleteComment(DestroyAPIView):
-        serializer_class=CommentSerializer
-        queryset = Comment.objects.all()
-
-        permission_classes=(IsAuthenticated,)
-    
-    
-
     

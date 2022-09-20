@@ -33,8 +33,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         # Add custom claims
         token['name'] = user.username
         # ...
-        return token
-    
+        return token 
 class CookieTokenRefreshSerializer(TokenRefreshSerializer):
     refresh = None
     def validate(self, attrs):
@@ -85,6 +84,7 @@ class CustomRegisterSerializer(serializers.ModelSerializer):
         sendemail.send_email(data)
         
         ProfileFallow.objects.create(myprofile=user)
+        ProfileFallow.following.add(user)
             
         return user
         
@@ -99,8 +99,11 @@ class UserProfileSerializer(serializers.ModelSerializer):
         
 
     def get_follower(self,obj):
-        count=ProfileFallow.objects.get(myprofile=obj).following.count()
-        return count
+        try:
+            count=ProfileFallow.objects.get(myprofile=obj).following.count()
+            return count
+        except ProfileFallow.DoesNotExist:
+                pass
     
     def get_following(self,obj):
         count=0

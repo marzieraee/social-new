@@ -15,6 +15,10 @@ from rest_framework import status, viewsets
 
 
 
+
+
+
+
     
 class MyTokenObtainPairView(TokenObtainPairView):
     
@@ -36,17 +40,6 @@ class MyTokenObtainPairView(TokenObtainPairView):
             return response
 
         return Response({"Error": "Something went wrong"}, status=400)
-
-
-
-
-    # def finalize_response(self, request, response, *args, **kwargs):
-    #     if response.data.get('refresh'):
-    #         cookie_max_age = 3600 * 24 * 14 # 14 days
-    #         response.set_cookie('refresh', response.data['refresh'], max_age=cookie_max_age, httponly=True , samesite='None')
-    #         del response.data['refresh']
-
-
 
 
 
@@ -91,15 +84,6 @@ class VerifyEmail(APIView):
             return Response({'isnot mach'},status=400)
     
         return Response({'chek your email'},status=200)
-    
-    
-    
-    
-    
-# class Profile(RetrieveAPIView):
-#     serializer_class = UserProfileSerializer
-#     queryset = User.objects.all()
-#     lookup_field = 'username'
     
     
     

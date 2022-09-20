@@ -73,6 +73,14 @@ class CommentSerializer(serializers.ModelSerializer):
         fields=('body','commenter','post')
         read_only_fields = ('commenter','post')
         
+    def create(self, validated_data):
+        comment=Comment.objects.create(
+            body=validated_data['body'],
+            post_id=self.context['pk'],
+            commenter=self.context['request'].user
+        )
+        comment.save()
+        return comment
 
          
 
@@ -84,8 +92,8 @@ class PostSerializer(serializers.ModelSerializer):
         
         model= MyPost
         
-        fields=('title','content','likes','author','comment','image','created_date','id',)
-        read_only_fields = ('last_login','posts','created_date','author','likes','comment')
+        fields=('title','content','user_likes','author','comment','image','created_date','id',)
+        read_only_fields = ('last_login','posts','created_date','user_likes')
 
     
     def create(self, validated_data):
