@@ -82,10 +82,7 @@ class CustomRegisterSerializer(serializers.ModelSerializer):
         print(data)   
         
         sendemail.send_email(data)
-        
-        ProfileFallow.objects.create(myprofile=user)
-        ProfileFallow.following.add(user)
-            
+      
         return user
         
                                 

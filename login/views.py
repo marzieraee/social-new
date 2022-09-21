@@ -80,6 +80,8 @@ class VerifyEmail(APIView):
         if user.cod == request.GET.get('cod'):
             user.is_active=True
             user.save()
+            profile=ProfileFallow.objects.create(myprofile=user)
+            profile.save()
         else:
             return Response({'isnot mach'},status=400)
     
