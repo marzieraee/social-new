@@ -60,7 +60,8 @@ INSTALLED_APPS = [
 
     
 ]
-SITE_ID = 4
+SITE_ID = 3
+
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
