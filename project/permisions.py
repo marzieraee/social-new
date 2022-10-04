@@ -6,20 +6,20 @@ from rest_framework.permissions import IsAuthenticated,AllowAny
 class UserIsOwnerOrReadOnly(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         if request.method in permissions.SAFE_METHODS:
-            return True
-        return obj.id == request.user.id
+            return obj.id == request.user.id
+        return True
     
 class UserIsOwnerPostOrReadOnly(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         if request.method in permissions.SAFE_METHODS:
-            return True
-        return obj.author == request.user
+            return obj.author == request.user
+        return True
     
 class UserIsOwnerCommentOrReadOnly(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         if request.method in permissions.SAFE_METHODS:
-            return True
-        return obj.commenter == request.user
+            return obj.commenter.username == request.user and obj.post.author == request.user
+        return True
     
     
 

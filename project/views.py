@@ -26,7 +26,7 @@ class CommentView(viewsets.ModelViewSet):
         if self.request.method == 'POST':
             permission_classes = [IsAuthenticated]
         elif self.request.method == 'PATCH' or 'DELETE':
-            permission_classes = [IsAuthenticated,UserIsOwnerCommentOrReadOnly]
+            permission_classes = [IsAuthenticated,UserIsOwnerCommentOrReadOnly,]
             
         return [permission() for permission in permission_classes]
         
