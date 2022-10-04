@@ -77,7 +77,7 @@ class PostView(viewsets.ModelViewSet):
         obj=self.get_object()
         if request.method=='POST':
             try: 
-                MyPost.objects.get(user_likes=request.user)
+                MyPost.objects.get(user_likes=request.user,id=pk)
                 obj.user_likes.remove(request.user)
                 return Response({"لایک رو برداستی"})
             except MyPost.DoesNotExist:
