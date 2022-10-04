@@ -165,5 +165,5 @@ class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model=CustomUser
         fields=('username','image','bio','email','id','follower','following','postcount',)
-        read_only_fields = ('id')
+        read_only_fields = ('email','id','follower','following','postcount',)
         
