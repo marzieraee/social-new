@@ -66,18 +66,10 @@ class PostView(viewsets.ModelViewSet):
         page = self.paginate_queryset(qs)
         if page is not None:
             serializer = self.get_serializer(page, many = True)
-        return self.get_paginated_response(serializer.data)
-            
+            return self.get_paginated_response(serializer.data)
+        else:   
+            return Response({'چنین صفحه ای نداریم '})
     
-    # @action(detail=False, methods=['get'])
-    # def explore(self, request, pk=None):
-    #     own_profile = self.request.user.myprofile.first()
-    #     myfollowing=own_profile.following.all()
-    #     qs=MyPost.objects.all().exclude(author__in=myfollowing)
-    #     page = self.paginate_queryset(qs)
-    #     if page is not None:
-    #         serializer = self.get_serializer(page, many = True)
-    #     return self.get_paginated_response(serializer.data)
 
     
     @action(detail=True, methods=['post','get'])
@@ -87,10 +79,10 @@ class PostView(viewsets.ModelViewSet):
             try: 
                 MyPost.objects.get(user_likes=request.user)
                 obj.user_likes.remove(request.user)
-                return Response({"REMOVED"})
+                return Response({"لایک رو برداستی"})
             except MyPost.DoesNotExist:
                 obj.user_likes.add(request.user)
-                return Response({"LIKED"})
+                return Response({"لایک کردی"})
                 
         else:
             try: 
@@ -98,13 +90,13 @@ class PostView(viewsets.ModelViewSet):
                 serializer=UserProfileSerializer(user_like,many=True)
                 return Response(serializer.data)
             except MyPost.DoesNotExist:
-                return Response({''})            
+                return Response({'چنین پستی نداریم '})            
             
     def get_permissions(self):
         if self.action == 'list' or self.request.method == 'POST':
             permission_classes = [IsAuthenticated]
         elif self.request.method == 'PATCH' or 'DELETE':
-            permission_classes = [UserIsOwnerPostOrReadOnly]
+            permission_classes = [IsAuthenticated,UserIsOwnerPostOrReadOnly]
             
         return [permission() for permission in permission_classes]
         

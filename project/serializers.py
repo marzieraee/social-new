@@ -70,8 +70,8 @@ class CommentSerializer(serializers.ModelSerializer):
         
         model=Comment
         
-        fields=('body','commenter','post')
-        read_only_fields = ('commenter','post')
+        fields=('body','commenter','post','id')
+        read_only_fields = ('commenter','post','id')
         
     def create(self, validated_data):
         comment=Comment.objects.create(
@@ -102,8 +102,10 @@ class PostSerializer(serializers.ModelSerializer):
             content=validated_data['content'],
             image=validated_data['image'],
             author=self.context['request'].user
-        )           
-        post.save()
-        return post
-
+        )   
+        if post:      
+            post.save()
+            return post
+        else:
+            return Response({"فیلدها اوکی نیست"})
 

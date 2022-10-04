@@ -3,6 +3,7 @@
 from rest_framework.response import Response
 from login.serializers import *
 from login.utils import *
+from rest_framework_simplejwt.views import TokenObtainPairView,TokenRefreshView
 
 from rest_framework.views import APIView
 from .serializers import *
@@ -11,7 +12,7 @@ from .models import *
 from rest_framework.generics import RetrieveAPIView,UpdateAPIView,DestroyAPIView, CreateAPIView,RetrieveUpdateAPIView,ListAPIView,ListCreateAPIView,RetrieveUpdateDestroyAPIView
 from rest_framework.views import APIView
 from rest_framework import status, viewsets
-
+from . import utils
 
 
 
@@ -67,7 +68,6 @@ class SignUp(CreateAPIView):
 
 
 
-
 class VerifyEmail(APIView):
     
     serializer_class=CustomRegisterSerializer
@@ -83,9 +83,9 @@ class VerifyEmail(APIView):
             profile=ProfileFallow.objects.create(myprofile=user)
             profile.save()
         else:
-            return Response({'isnot mach'},status=400)
+            return Response({'کد درست نیست'},status=400)
     
-        return Response({'chek your email'},status=200)
+        return Response({'خوش آمدی'},status=200)
     
     
     
