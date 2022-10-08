@@ -14,7 +14,7 @@ from django.utils.crypto import get_random_string
 from django.contrib.sites.shortcuts import get_current_site
 from .utils import sendemail
 from django.contrib.auth import get_user_model, authenticate
-
+import json
 from rest_framework_simplejwt.serializers import TokenObtainSerializer, TokenRefreshSerializer
 from rest_framework.response import Response
 from rest_framework_simplejwt.exceptions import InvalidToken
@@ -134,7 +134,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
     follower=serializers.SerializerMethodField()
     following=serializers.SerializerMethodField()
     postcount=serializers.SerializerMethodField()
-
+    # follower_user=serializers.SerializerMethodField()
         
 
     def get_follower(self,obj):
@@ -144,13 +144,29 @@ class UserProfileSerializer(serializers.ModelSerializer):
         except ProfileFallow.DoesNotExist:
                 pass
     
+    # def get_follower_user(self,obj):
+    #     data=[]
+    #     alluser=CustomUser.objects.all()
+    #     for singleuser in alluser:
+    #         try:
+    #             ProfileFallow.objects.get(myprofile=singleuser,following=obj)
+                
+    #             data.append(singleuser)
+    #         except ProfileFallow.DoesNotExist:
+    #             pass
+    #     return json.dumps(data)
+    
+    
+    
     def get_following(self,obj):
-        count=0
+        followlist=set()
         alluser=CustomUser.objects.all()
         for singleuser in alluser:
             try:
                 ProfileFallow.objects.get(myprofile=singleuser,following=obj)
+                
                 count=+1
+                followlist.add(singleuser.username)
             except ProfileFallow.DoesNotExist:
                 pass
         return count
@@ -164,6 +180,6 @@ class UserProfileSerializer(serializers.ModelSerializer):
    
     class Meta:
         model=CustomUser
-        fields=('username','image','bio','email','id','follower','following','postcount',)
-        read_only_fields = ('email','id','follower','following','postcount',)
+        fields=('username','image','bio','email','id','follower','following','postcount','last_login')
+        read_only_fields = ('email','id','follower','following','postcount','last_login')
         

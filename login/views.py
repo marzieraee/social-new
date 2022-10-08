@@ -129,3 +129,8 @@ class FollowView(viewsets.ViewSet):
         own_profile.following.remove(following_profile)
         return Response({'message': 'you are no longer following him'}, status=status.HTTP_200_OK)
     
+    
+
+    
+    
+
