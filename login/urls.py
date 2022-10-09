@@ -22,5 +22,6 @@ urlpatterns = [
 #         path('changepassword/<str:username>', views.ChangePass.as_view(), name='changepass'),
     path('follow/<int:pk>/',FollowView.as_view({'post': 'follow'})),
     path('unfollow/<int:pk>/',FollowView.as_view({'post': 'unfollow'})),
+    path('profilefallow/<int:pk>/',FollowView.as_view({'get': 'retrieve'})),
 
 ]

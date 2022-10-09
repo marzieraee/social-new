@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from login.serializers import *
 from login.utils import *
 from rest_framework_simplejwt.views import TokenObtainPairView,TokenRefreshView
-
+from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from .serializers import *
 from project.permisions import *
@@ -116,7 +116,9 @@ class ShowEditDelProfile(RetrieveUpdateDestroyAPIView) :
     
 class FollowView(viewsets.ViewSet):
     queryset = ProfileFallow.objects.all()
+    serializer_class = ProfileSerializer
 
+    
     def follow(self, request, pk):
         own_profile = ProfileFallow.objects.get(myprofile=request.user)
         following_profile =CustomUser.objects.get(id=pk)
@@ -129,8 +131,8 @@ class FollowView(viewsets.ViewSet):
         own_profile.following.remove(following_profile)
         return Response({'message': 'you are no longer following him'}, status=status.HTTP_200_OK)
     
-    
-
-    
-    
-
+    def retrieve(self, request, pk):
+        
+        user = get_object_or_404(self.queryset, pk=pk)
+        serializer = ProfileSerializer(user)
+        return Response(serializer.data)
