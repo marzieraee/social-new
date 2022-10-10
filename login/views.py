@@ -115,9 +115,7 @@ class ShowEditDelProfile(RetrieveUpdateDestroyAPIView) :
     
     
 class FollowView(viewsets.ViewSet):
-    queryset = ProfileFallow.objects.all()
-    serializer_class = ProfileSerializer
-
+    lookup_field = 'username'
     
     def follow(self, request, pk):
         own_profile = ProfileFallow.objects.get(myprofile=request.user)
@@ -131,8 +129,22 @@ class FollowView(viewsets.ViewSet):
         own_profile.following.remove(following_profile)
         return Response({'message': 'you are no longer following him'}, status=status.HTTP_200_OK)
     
-    def retrieve(self, request, pk):
-        
-        user = get_object_or_404(self.queryset, pk=pk)
+    def retrieve(self, request, username):
+        queryset=ProfileFallow.objects.all()
+        user = get_object_or_404(queryset, myprofile__username=username)
         serializer = ProfileSerializer(user)
         return Response(serializer.data)
+    
+    
+    def follower(self, request, username):
+                
+        set=[]
+        
+        try:
+            data=ProfileFallow.objects.filter(following__username=username)
+            print (data)
+            listfollowers=ProfileSerializer(data,many=True)
+            return Response(listfollowers.data)
+        except CustomUser.DoesNotExist:
+                pass
+        

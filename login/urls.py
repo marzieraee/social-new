@@ -20,8 +20,10 @@ urlpatterns = [
     path('register/',SignUp.as_view(), name='register'),
     path('profile/<str:username>', ShowEditDelProfile.as_view(), name='profile'),
 #         path('changepassword/<str:username>', views.ChangePass.as_view(), name='changepass'),
-    path('follow/<int:pk>/',FollowView.as_view({'post': 'follow'})),
+    path('follow/<str:username>/',FollowView.as_view({'post': 'follow'})),
     path('unfollow/<int:pk>/',FollowView.as_view({'post': 'unfollow'})),
-    path('profilefallow/<int:pk>/',FollowView.as_view({'get': 'retrieve'})),
+    path('profilefollow/<str:username>/',FollowView.as_view({'get': 'retrieve'})),
+    path('follwer/<str:username>/',FollowView.as_view({'get': 'follower'})),
+
 
 ]

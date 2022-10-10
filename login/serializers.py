@@ -1,5 +1,6 @@
 
 from ast import IsNot
+from crypt import methods
 from rest_framework import serializers
 from polls.models import User
 from django.urls import reverse
@@ -18,6 +19,7 @@ import json
 from rest_framework_simplejwt.serializers import TokenObtainSerializer, TokenRefreshSerializer
 from rest_framework.response import Response
 from rest_framework_simplejwt.exceptions import InvalidToken
+from django.shortcuts import get_object_or_404
 
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -125,52 +127,21 @@ class CustomRegisterSerializer(serializers.ModelSerializer):
         print(data)   
         sendemail.send_email(data)
         return Response({'لطفا ایمیل خود را چک کنید'},created)
+    
+    
+    
        
-              
-                                
+        
+
                    
                      
 class UserProfileSerializer(serializers.ModelSerializer):
-    follower=serializers.SerializerMethodField()
-    following=serializers.SerializerMethodField()
     postcount=serializers.SerializerMethodField()
-    # follower_user=serializers.SerializerMethodField()
-        
+    
 
-    def get_follower(self,obj):
-        try:
-            count=ProfileFallow.objects.get(myprofile=obj).following.count()
-            return count
-        except ProfileFallow.DoesNotExist:
-                pass
-    
-    # def get_follower_user(self,obj):
-    #     data=[]
-    #     alluser=CustomUser.objects.all()
-    #     for singleuser in alluser:
-    #         try:
-    #             ProfileFallow.objects.get(myprofile=singleuser,following=obj)
-                
-    #             data.append(singleuser)
-    #         except ProfileFallow.DoesNotExist:
-    #             pass
-    #     return json.dumps(data)
     
     
-    
-    def get_following(self,obj):
-        followlist=set()
-        alluser=CustomUser.objects.all()
-        for singleuser in alluser:
-            try:
-                ProfileFallow.objects.get(myprofile=singleuser,following=obj)
-                
-                count=+1
-                followlist.add(singleuser.username)
-            except ProfileFallow.DoesNotExist:
-                pass
-        return count
-    
+  
     def get_postcount(self,obj):
         count=MyPost.objects.filter(author=obj).count()
         return count
@@ -180,62 +151,48 @@ class UserProfileSerializer(serializers.ModelSerializer):
    
     class Meta:
         model=CustomUser
-        fields=('username','image','bio','email','id','follower','following','postcount','last_login')
-        read_only_fields = ('email','id','follower','following','postcount','last_login')
+        fields=('username','image','bio','email','id','postcount','last_login')
+        read_only_fields = ('email','id','postcount','last_login')
         
         
     
+  
+
 class ProfileSerializer(serializers.ModelSerializer):
-    follower=serializers.SerializerMethodField()
-    follower_user=serializers.SerializerMethodField()
+    myprofile=serializers.CharField(source='myprofile.username')
+    following=UserProfileSerializer(many=True)
     following_count=serializers.SerializerMethodField()
-            
-
-    def get_following(self,obj):
-        profile=CustomUser.objects.get(id=obj)
-
+    followercount=serializers.SerializerMethodField()
+    
+    
+    def get_followercount(self,obj):
+        obj1=CustomUser.objects.get(myprofile=obj)
+        
         try:
-            count=ProfileFallow.objects.get(myprofile=profile).following.count()
+            count=ProfileFallow.objects.filter(following=obj1).count()
             return count
         except ProfileFallow.DoesNotExist:
                 pass
-    
-    def get_follower_user(self,obj):
-        data=[]
-        profile=CustomUser.objects.get(id=obj)
-        allpro=ProfileFallow.objects.all()
-        for singleuser in allpro:
-            try:
-                ProfileFallow.objects.get(myprofile=singleuser,following=profile)
-                
-                data.append(singleuser)
-            except ProfileFallow.DoesNotExist:
-                pass
-        return json.dumps(data)
-    
-    
-    
-    # def get_following(self,obj):
-    #     followlist=set()
-    #     alluser=CustomUser.objects.all()
-    #     for singleuser in alluser:
-    #         try:
-    #             ProfileFallow.objects.get(myprofile=singleuser,following=obj)
-                
-    #             count=+1
-    #             followlist.add(singleuser.username)
-    #         except ProfileFallow.DoesNotExist:
-    #             pass
-    #     return count
-    
-  
+        
+        
         
             
-
-   
+    def get_following_count(self,obj):
+        obj1=CustomUser.objects.get(myprofile=obj)
+        try:
+            count=ProfileFallow.objects.get(myprofile=obj1).following.count()
+            return count
+        except ProfileFallow.DoesNotExist:
+                pass
+            
+  
+            
     class Meta:
         model=ProfileFallow
-        fields=('myprofile','follower_user','follower','following','following_count')
-        read_only_fields = ('myprofile','follower_user','following','follower','following')
+        fields=('myprofile','following','following_count','followercount')
+        read_only_fields = ('myprofile','following','following_count','followercount')
         
         
+        
+
+    
