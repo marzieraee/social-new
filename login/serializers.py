@@ -189,8 +189,8 @@ class ProfileSerializer(serializers.ModelSerializer):
             
     class Meta:
         model=ProfileFallow
-        fields=('myprofile','following','followingcount','followercount')
-        read_only_fields = ('myprofile','following','followingcount','followercount')
+        fields=('myprofile','following')
+        read_only_fields = ('myprofile','following')
         
         
         

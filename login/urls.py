@@ -23,7 +23,7 @@ urlpatterns = [
     path('follow/<str:username>/',FollowView.as_view({'post': 'follow'})),
     path('unfollow/<int:pk>/',FollowView.as_view({'post': 'unfollow'})),
     path('profilefollow/<str:username>/',FollowView.as_view({'get': 'retrieve'})),
-    path('follwer/<str:username>/',FollowView.as_view({'get': 'follower'})),
+    path('follower/<str:username>/',FollowView.as_view({'get': 'follower'})),
 
 
 ]
