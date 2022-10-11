@@ -137,9 +137,32 @@ class CustomRegisterSerializer(serializers.ModelSerializer):
                      
 class UserProfileSerializer(serializers.ModelSerializer):
     postcount=serializers.SerializerMethodField()
+    followingcount=serializers.SerializerMethodField()
+    followercount=serializers.SerializerMethodField()
     
+            
 
     
+    
+    def get_followercount(self,obj):
+        obj1=ProfileFallow.objects.get(myprofile=obj)
+        
+        try:
+            count=ProfileFallow.objects.filter(following=obj).count()
+            return count
+        except ProfileFallow.DoesNotExist:
+                pass
+        
+        
+        
+            
+    def get_followingcount(self,obj):
+        obj1=ProfileFallow.objects.get(myprofile=obj)
+        try:
+            count=ProfileFallow.objects.get(myprofile=obj).following.count()
+            return count
+        except ProfileFallow.DoesNotExist:
+                pass
     
   
     def get_postcount(self,obj):
@@ -151,8 +174,8 @@ class UserProfileSerializer(serializers.ModelSerializer):
    
     class Meta:
         model=CustomUser
-        fields=('username','image','bio','email','id','postcount','last_login')
-        read_only_fields = ('email','id','postcount','last_login')
+        fields=('username','image','bio','email','id','followingcount','postcount','last_login','followercount')
+        read_only_fields = ('email','id','postcount','followingcount','last_login','followercount')
         
         
     
@@ -161,36 +184,13 @@ class UserProfileSerializer(serializers.ModelSerializer):
 class ProfileSerializer(serializers.ModelSerializer):
     myprofile=serializers.CharField(source='myprofile.username')
     following=UserProfileSerializer(many=True)
-    following_count=serializers.SerializerMethodField()
-    followercount=serializers.SerializerMethodField()
     
-    
-    def get_followercount(self,obj):
-        obj1=CustomUser.objects.get(myprofile=obj)
-        
-        try:
-            count=ProfileFallow.objects.filter(following=obj1).count()
-            return count
-        except ProfileFallow.DoesNotExist:
-                pass
-        
-        
-        
-            
-    def get_following_count(self,obj):
-        obj1=CustomUser.objects.get(myprofile=obj)
-        try:
-            count=ProfileFallow.objects.get(myprofile=obj1).following.count()
-            return count
-        except ProfileFallow.DoesNotExist:
-                pass
-            
   
             
     class Meta:
         model=ProfileFallow
-        fields=('myprofile','following','following_count','followercount')
-        read_only_fields = ('myprofile','following','following_count','followercount')
+        fields=('myprofile','following','followingcount','followercount')
+        read_only_fields = ('myprofile','following','followingcount','followercount')
         
         
         
