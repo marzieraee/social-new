@@ -93,7 +93,7 @@ class CustomUser(AbstractBaseUser):
 
 
 class ProfileFallow(models.Model):
-    myprofile=models.ForeignKey(CustomUser, on_delete=models.CASCADE,related_name='myprofile')
-    following=models.ManyToManyField(CustomUser,related_name='follower')
+    from_user=models.ForeignKey(CustomUser, on_delete=models.CASCADE,related_name='following',null=True)
+    to_user=models.ForeignKey(CustomUser,related_name='follower',on_delete=models.CASCADE,null=True)
     
    

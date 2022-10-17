@@ -73,11 +73,11 @@ class VerifyEmail(APIView):
     serializer_class=CustomRegisterSerializer
     def patch(self,request,*args, **kwargs):
         try:
-            user = User.objects.get(email=request.GET.get('email'))
+            user = User.objects.get(username=request.PATCH.get('username'))
         except User.DoesNotExist:
             user = None
                               
-        if user.cod == request.GET.get('cod'):
+        if user.cod == request.PATCH.get('cod'):
             user.is_active=True
             user.save()
             profile=ProfileFallow.objects.create(myprofile=user)
@@ -116,35 +116,43 @@ class ShowEditDelProfile(RetrieveUpdateDestroyAPIView) :
     
 class FollowView(viewsets.ViewSet):
     lookup_field = 'username'
-    
-    def follow(self, request, pk):
-        own_profile = ProfileFallow.objects.get(myprofile=request.user)
-        following_profile =CustomUser.objects.get(id=pk)
-        own_profile.following.add(following_profile)        
-        return Response({'message': 'now you are following'}, status=status.HTTP_200_OK)
+    permission_classes=[IsAuthenticated,]
+    def follow(self, request, username):
+        to_user = CustomUser.objects.get(username=username)
+        try:
+            ProfileFallow.objects.get(from_user=request.user,to_user=to_user)
+            return Response({'message': 'you follow before'}, status=status.HTTP_200_OK)
 
-    def unfollow(self, request, pk):
-        own_profile = request.user.myprofile.first()
-        following_profile = CustomUser.objects.get(id=pk)
-        own_profile.following.remove(following_profile)
-        return Response({'message': 'you are no longer following him'}, status=status.HTTP_200_OK)
+            
+        except:
+            
+            ProfileFallow.objects.create(from_user=request.user,to_user=to_user)
+            return Response({'message': 'now you are following'}, status=status.HTTP_200_OK)
+
+    def unfollow(self, request, username):
+        to_user = CustomUser.objects.get(username=username)
+        
+        user=ProfileFallow.objects.get(from_user=request.user,to_user=to_user)
+        user.delete()
+        return Response({'message': 'now you are not following'}, status=status.HTTP_200_OK)
     
-    def retrieve(self, request, username):
-        queryset=ProfileFallow.objects.all()
-        user = get_object_or_404(queryset, myprofile__username=username)
-        serializer = ProfileSerializer(user)
-        return Response(serializer.data)
-    
+    def following(self, request, username):
+        try:
+            data=ProfileFallow.objects.filter(from_user__username=username)
+            
+            print (data)
+            listfollowers=FollowingSerializer(data,many=True)
+            return Response(listfollowers.data)
+        except ProfileFallow.DoesNotExist:
+                return Response({'message': 'one thing is wrong'})
+      
     
     def follower(self, request, username):
-                
-        set=[]
-        
         try:
-            data=ProfileFallow.objects.filter(following__username=username)
+            data=ProfileFallow.objects.filter(to_user__username=username)
+            
             print (data)
-            listfollowers=ProfileSerializer(data,many=True)
+            listfollowers=FollowerSerializer(data,many=True)
             return Response(listfollowers.data)
-        except CustomUser.DoesNotExist:
-                pass
-        
+        except ProfileFallow.DoesNotExist:
+                return Response({'message': 'one thing is wrong'})

@@ -54,13 +54,13 @@ class PostView(viewsets.ModelViewSet):
     pagination_class=StandardPagination
     
     def list(self, request, *args, **kwargs):
-        own_profile = self.request.user.myprofile.first()
-        myfollowing=own_profile.following.all()
+        
+        own_profile = ProfileFallow.objects.filter(to_user=request.user)
         route=request.query_params["route"]
         if route=="home":
-            qs=MyPost.objects.filter(author__in=myfollowing)
+            qs=MyPost.objects.filter(author__following__in=own_profile)
         elif route=="explore": 
-            qs=MyPost.objects.exclude(author__in=myfollowing)
+            qs=MyPost.objects.exclude(author__following__in=own_profile)
         else:
             qs=MyPost.objects.all()
         page = self.paginate_queryset(qs)

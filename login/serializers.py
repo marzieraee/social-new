@@ -25,8 +25,8 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 
-# def get_cod():
-#     return get_random_string(length=6,allowed_chars='1234567')
+def get_cod():
+    return get_random_string(length=6,allowed_chars='1234567')
 
 # class CustomTokenObtainPairSerializer(TokenObtainSerializer):
     
@@ -95,6 +95,9 @@ class CookieTokenRefreshSerializer(TokenRefreshSerializer):
 
 
 User = get_user_model()
+
+
+
 class CustomRegisterSerializer(serializers.ModelSerializer):
     
     password = serializers.CharField(min_length=8, write_only=True)
@@ -115,16 +118,15 @@ class CustomRegisterSerializer(serializers.ModelSerializer):
         current_site=get_current_site(self.context['request']).domain
         created=User.objects.create(email=validated_data['email'],username=validated_data['username'])
             
+        created.password=make_password(validated_data['password'])
+        created.cod=get_cod()
+        created.save()
         email=str(created.email)
         cod=str(created.cod)
         absurl=current_site+relatatedlink+'?email='+email+'&cod='+cod
-        data={"email_body":absurl,
+        data={"email_body":cod,
             "to_email":created.email,"subject":"its ok",} 
-           
-        created.password=make_password(validated_data['password'])
-        created.cod=self.get_cod()
-        created.save()
-        print(data)   
+        print(data)
         sendemail.send_email(data)
         return Response({'لطفا ایمیل خود را چک کنید'},created)
     
@@ -137,32 +139,43 @@ class CustomRegisterSerializer(serializers.ModelSerializer):
                      
 class UserProfileSerializer(serializers.ModelSerializer):
     postcount=serializers.SerializerMethodField()
-    followingcount=serializers.SerializerMethodField()
-    followercount=serializers.SerializerMethodField()
+    # followingcount=serializers.SerializerMethodField()
+    # followercount=serializers.SerializerMethodField()
+    # follower=serializers.SerializerMethodField(read_only=True)
+    
+    
+    
+    # def get_follower(self, obj):
+        
+    #     context = self.context
+    #     request = context.get("request")
+    #     qs = request.user.follower.all()
+    #     data = [{'id': obj.pk, 'user_id': obj.user_id, 'username': obj.req_field} for obj in qs]
+    #     return data
     
             
 
     
     
-    def get_followercount(self,obj):
-        obj1=ProfileFallow.objects.get(myprofile=obj)
+    # def get_followercount(self,obj):
+    #     obj1=ProfileFallow.objects.get(myprofile=obj)
         
-        try:
-            count=ProfileFallow.objects.filter(following=obj).count()
-            return count
-        except ProfileFallow.DoesNotExist:
-                pass
+    #     try:
+    #         count=ProfileFallow.objects.filter(following=obj).count()
+    #         return count
+    #     except ProfileFallow.DoesNotExist:
+    #             pass
         
         
         
             
-    def get_followingcount(self,obj):
-        obj1=ProfileFallow.objects.get(myprofile=obj)
-        try:
-            count=ProfileFallow.objects.get(myprofile=obj).following.count()
-            return count
-        except ProfileFallow.DoesNotExist:
-                pass
+    # def get_followingcount(self,obj):
+    #     obj1=ProfileFallow.objects.get(myprofile=obj)
+    #     try:
+    #         count=ProfileFallow.objects.get(myprofile=obj).following.count()
+    #         return count
+    #     except ProfileFallow.DoesNotExist:
+    #             pass
     
   
     def get_postcount(self,obj):
@@ -174,23 +187,38 @@ class UserProfileSerializer(serializers.ModelSerializer):
    
     class Meta:
         model=CustomUser
-        fields=('username','image','bio','email','id','followingcount','postcount','last_login','followercount')
-        read_only_fields = ('email','id','postcount','followingcount','last_login','followercount')
+        fields=('username','image','bio','email','id','postcount','last_login',)
+        read_only_fields = ('email','id','postcount','last_login',)
         
         
     
   
 
-class ProfileSerializer(serializers.ModelSerializer):
-    myprofile=serializers.CharField(source='myprofile.username')
-    following=UserProfileSerializer(many=True)
+class FollowerSerializer(serializers.ModelSerializer):
+   from_user=UserProfileSerializer()
     
-  
-            
-    class Meta:
+
+   class Meta:
+        
         model=ProfileFallow
-        fields=('myprofile','following')
-        read_only_fields = ('myprofile','following')
+        fields=('from_user',)
+        read_only_fields = ('from_user',)
+        
+        
+        
+        
+        
+class FollowingSerializer(serializers.ModelSerializer):
+    
+    
+    to_user=UserProfileSerializer()
+    
+
+    class Meta:
+        
+        model=ProfileFallow
+        fields=('to_user',)
+        read_only_fields = ('to_user',)
         
         
         
