@@ -139,6 +139,8 @@ class CustomRegisterSerializer(serializers.ModelSerializer):
                      
 class UserProfileSerializer(serializers.ModelSerializer):
     postcount=serializers.SerializerMethodField()
+    youfollow=serializers.SerializerMethodField()
+
     # followingcount=serializers.SerializerMethodField()
     # followercount=serializers.SerializerMethodField()
     # follower=serializers.SerializerMethodField(read_only=True)
@@ -182,13 +184,24 @@ class UserProfileSerializer(serializers.ModelSerializer):
         count=MyPost.objects.filter(author=obj).count()
         return count
         
+    def get_youfollow(self,obj):
+        if self.context['request'].user!=obj:
+            try:
+                ProfileFallow.objects.get(from_user=self.context['request'].user,to_user=obj)
+                return True
+            except:
+                
+                return False
+        else:
+            
+            return {'ITS YOURSELF'}
             
 
    
     class Meta:
         model=CustomUser
-        fields=('username','image','bio','email','id','postcount','last_login',)
-        read_only_fields = ('email','id','postcount','last_login',)
+        fields=('username','image','bio','email','id','postcount','last_login','youfollow',)
+        read_only_fields = ('email','id','postcount','last_login','youfollow',)
         
         
     

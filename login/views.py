@@ -120,21 +120,16 @@ class FollowView(viewsets.ViewSet):
     def follow(self, request, username):
         to_user = CustomUser.objects.get(username=username)
         try:
-            ProfileFallow.objects.get(from_user=request.user,to_user=to_user)
-            return Response({'message': 'you follow before'}, status=status.HTTP_200_OK)
-
+            user=ProfileFallow.objects.get(from_user=request.user,to_user=to_user)
+            user.delete()
+            return Response({'message': 'now you are not following'}, status=status.HTTP_200_OK)
             
         except:
             
             ProfileFallow.objects.create(from_user=request.user,to_user=to_user)
             return Response({'message': 'now you are following'}, status=status.HTTP_200_OK)
 
-    def unfollow(self, request, username):
-        to_user = CustomUser.objects.get(username=username)
-        
-        user=ProfileFallow.objects.get(from_user=request.user,to_user=to_user)
-        user.delete()
-        return Response({'message': 'now you are not following'}, status=status.HTTP_200_OK)
+    
     
     def following(self, request, username):
         try:

@@ -93,7 +93,7 @@ class PostView(viewsets.ModelViewSet):
                 return Response({'چنین پستی نداریم '})            
             
     def get_permissions(self):
-        if self.action == 'list' or self.request.method == 'POST':
+        if self.request.method  == 'GET' or self.request.method == 'POST':
             permission_classes = [IsAuthenticated]
         elif self.request.method == 'PATCH' or 'DELETE':
             permission_classes = [IsAuthenticated,UserIsOwnerPostOrReadOnly]

@@ -21,7 +21,6 @@ urlpatterns = [
     path('profile/<str:username>', ShowEditDelProfile.as_view(), name='profile'),
 #         path('changepassword/<str:username>', views.ChangePass.as_view(), name='changepass'),
     path('follow/<str:username>/',FollowView.as_view({'post': 'follow'})),
-    path('unfollow/<str:username>/',FollowView.as_view({'post': 'unfollow'})),
     path('following/<str:username>/',FollowView.as_view({'get': 'following'})),
     path('follower/<str:username>/',FollowView.as_view({'get': 'follower'})),
 

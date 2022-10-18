@@ -1,3 +1,4 @@
+from multiprocessing import context
 from django.urls import reverse
 from rest_framework import serializers
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -88,12 +89,24 @@ class CommentSerializer(serializers.ModelSerializer):
 class PostSerializer(serializers.ModelSerializer):
     author=UserProfileSerializer(read_only=True)
     comment=CommentSerializer(many=True,read_only=True)
+    youliked=serializers.SerializerMethodField()
+    
+    
+    
+    def get_youliked(self,obj):
+         try: 
+            MyPost.objects.get(user_likes=self.context['request'].user,id=obj.id)
+            
+            return True
+         except MyPost.DoesNotExist:
+            return False
+    
     class Meta:
         
         model= MyPost
         
-        fields=('title','content','user_likes','author','comment','image','created_date','id',)
-        read_only_fields = ('last_login','posts','created_date','user_likes',)
+        fields=('title','content','user_likes','author','comment','image','created_date','id','youliked')
+        read_only_fields = ('last_login','posts','created_date','user_likes','youliked')
 
     
     def create(self, validated_data):
