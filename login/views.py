@@ -1,40 +1,38 @@
 
 # Create your views here.
-from rest_framework.response import Response
-from login.serializers import *
-from login.utils import *
-from rest_framework_simplejwt.views import TokenObtainPairView,TokenRefreshView
-from django.shortcuts import get_object_or_404
-from rest_framework.views import APIView
-from .serializers import *
-from project.permisions import *
+import jwt
 from .models import *
-from rest_framework.generics import RetrieveAPIView,UpdateAPIView,DestroyAPIView, CreateAPIView,RetrieveUpdateAPIView,ListAPIView,ListCreateAPIView,RetrieveUpdateDestroyAPIView
+from login.utils import *
+from .serializers import *
+from login.serializers import *
+from project.permisions import *
+from django.conf import settings
+from rest_framework.views import APIView
 from rest_framework.views import APIView
 from rest_framework import status, viewsets
-from . import utils
+from rest_framework.response import Response
+from rest_framework.generics import CreateAPIView,RetrieveUpdateDestroyAPIView
+from rest_framework_simplejwt.views import TokenObtainPairView,TokenRefreshView
 
 
 
-
+    
 
 
 
     
 class MyTokenObtainPairView(TokenObtainPairView):
-    
+    """
+    Takes a set of user credentials and returns an access and refresh JSON web
+    token pair to prove the authentication of those credentials.
+    and here we try to set refresh tiken in the cookie
+    """
     serializer_class = MyTokenObtainPairSerializer
     def post(self, request, *args, **kwargs):
-        # you need to instantiate the serializer with the request data
         serializer = self.get_serializer(data=request.data)
-        # you must call .is_valid() before accessing validated_data
         serializer.is_valid(raise_exception=True)  
-
-        # get access and refresh tokens to do what you like with
         access = serializer.validated_data.get("access", None)
         refresh = serializer.validated_data.get("refresh", None)
-
-        # build your response and set cookie
         if access is not None:
             response = Response({"token": access}, status=200)
             response.set_cookie('refresh', refresh, httponly=True,samesite='None',secure=True)
@@ -45,59 +43,67 @@ class MyTokenObtainPairView(TokenObtainPairView):
 
 
 class CookieTokenRefreshView(TokenRefreshView):
+    """
+    Takes a refresh type JSON web token and returns an access type JSON web
+    token if the refresh token is valid.
+    """
     serializer_class = CookieTokenRefreshSerializer
 
 
 class logout(APIView):
-    
+    '''log out means clear refresh token from cookie'''
     def post(self,request):
-        
        response = Response()
-    
-
        response.delete_cookie('refresh')
        response.data={"masage":"yesss"}
        return response
    
    
 class SignUp(CreateAPIView):
-    
-    
-    serializer_class = CustomRegisterSerializer
+    '''from serilizer takes username and email and password then make a user and send 
+    email them to verify their email '''
+    serializer_class = UserProfileSerializer
     
 
 
 
 class VerifyEmail(APIView):
     
-    serializer_class=CustomRegisterSerializer
-    def patch(self,request,*args, **kwargs):
-        try:
-            user = User.objects.get(username=request.PATCH.get('username'))
-        except User.DoesNotExist:
-            user = None
-                              
-        if user.cod == request.PATCH.get('cod'):
-            user.is_active=True
-            user.save()
-            profile=ProfileFallow.objects.create(myprofile=user)
-            profile.save()
-        else:
-            return Response({'کد درست نیست'},status=400)
-    
-        return Response({'خوش آمدی'},status=200)
-    
-    
+    '''when user requests get, is_active feature get true , this is considered ,if token got expired and
+    or invalid token'''
+    serializer_class=UserProfileSerializer
+    def get(self,request,*args, **kwargs):
+        if request.method=='GET':
+            token = request.GET.get('token')
+
+            try:
+                payload = jwt.decode(token, settings.SECRET_KEY, algorithms='HS256')
+                user = User.objects.filter(id=payload['user_id']).first()
+                
+                if user.is_active:
+                    return Response({'detail':'قبلا تایید شد لاگین کنین'}, status=status.HTTP_400_BAD_REQUEST)
+                else:
+                    user.is_active = True
+                    user.save()
+                    return Response({'detail':'خوش آمدی'}, status=status.HTTP_200_OK)
+            except jwt.ExpiredSignatureError:
+            
+                return Response({'detail':'توکن شمامنقضی شد'},status=status.HTTP_400_BAD_REQUEST)
+            except jwt.exceptions.DecodeError:
+                return Response({'detail':'توکن درست نیست'}, status=status.HTTP_400_BAD_REQUEST)
+            
+
     
     
     
 class ShowEditDelProfile(RetrieveUpdateDestroyAPIView) :
+    '''the name of class shows every things'''
     queryset = User.objects.all()
     lookup_field = 'username'
 
     serializer_class = UserProfileSerializer
     
-    # permission_classes=(IsAuthenticated,UserIsOwnerOrReadOnly)
+    permission_classes=(IsAuthenticated,UserIsOwnerOrReadOnly)
     def get_queryset(self):
         super().get_queryset()
         if self.request.method=='GET':
@@ -115,6 +121,8 @@ class ShowEditDelProfile(RetrieveUpdateDestroyAPIView) :
     
     
 class FollowView(viewsets.ViewSet):
+    '''in this class "follow/user" return following or unfollowing  the user,and "following" and "follower"/user
+    return the user followings and followers'''
     lookup_field = 'username'
     permission_classes=[IsAuthenticated,]
     def follow(self, request, username):
@@ -122,32 +130,28 @@ class FollowView(viewsets.ViewSet):
         try:
             user=ProfileFallow.objects.get(from_user=request.user,to_user=to_user)
             user.delete()
-            return Response({'message': 'now you are not following'}, status=status.HTTP_200_OK)
+            return Response({'detail': 'now you are not following'}, status=status.HTTP_200_OK)
             
         except:
             
             ProfileFallow.objects.create(from_user=request.user,to_user=to_user)
-            return Response({'message': 'now you are following'}, status=status.HTTP_200_OK)
+            return Response({'detail': 'now you are following'}, status=status.HTTP_200_OK)
 
     
     
     def following(self, request, username):
         try:
             data=ProfileFallow.objects.filter(from_user__username=username)
-            
-            print (data)
             listfollowers=FollowingSerializer(data,many=True)
             return Response(listfollowers.data)
         except ProfileFallow.DoesNotExist:
-                return Response({'message': 'one thing is wrong'})
+                return Response({'detail': 'one thing is wrong'})
       
     
     def follower(self, request, username):
         try:
             data=ProfileFallow.objects.filter(to_user__username=username)
-            
-            print (data)
             listfollowers=FollowerSerializer(data,many=True)
             return Response(listfollowers.data)
         except ProfileFallow.DoesNotExist:
-                return Response({'message': 'one thing is wrong'})
+                return Response({'detail': 'one thing is wrong'})

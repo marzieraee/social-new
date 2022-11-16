@@ -13,6 +13,9 @@ class MyPost(models.Model):
     def __str__(self):
         return self.title
     
+    
+    class Meta:
+        ordering = ("-created_date",)
 
     
 class Comment(models.Model):
@@ -20,5 +23,5 @@ class Comment(models.Model):
     commenter = models.ForeignKey(CustomUser,on_delete=models.CASCADE,related_name='commenter',null=True)
     body = models.TextField()
     created_on = models.DateTimeField(auto_now_add=True)
-    
+      
     
