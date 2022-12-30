@@ -42,6 +42,7 @@ class CustomTokenObtainPairSerializer(TokenObtainSerializer):
     '''this class inherit TOS that get username filed and pass and serilize them, in this class we customize 
     validations if the email dosent exist then response,or if it exist but isnt active send them activations
     email,and say them to check their email'''
+    
     def validate(self,attrs):
         authenticate_kwargs = {
             self.username_field: attrs[self.username_field],
@@ -79,7 +80,9 @@ class MyTokenObtainPairSerializer(CustomTokenObtainPairSerializer):
     
     '''calling refresh token and adding another feature 
     in validate,valid_data of access and refresh token send to view  to login '''
+    
     @classmethod
+    
     def get_token(cls, user):
         token=RefreshToken.for_user(user)
         token['name'] = user.username
@@ -96,7 +99,9 @@ class MyTokenObtainPairSerializer(CustomTokenObtainPairSerializer):
     
     
 class CookieTokenRefreshSerializer(TokenRefreshSerializer):
+
     '''here we get refresh token from cookie and then send it to view'''
+    
     refresh = None
     def validate(self, attrs):
         attrs['refresh'] = self.context['request'].COOKIES.get('refresh')
@@ -106,11 +111,13 @@ class CookieTokenRefreshSerializer(TokenRefreshSerializer):
             raise InvalidToken('No valid token found in cookie \'refresh_token\'')
         
    
-User=get_user_model()                 
+User=get_user_model()            
+     
 class UserProfileSerializer(serializers.ModelSerializer):
     
     '''this is a usefull class for me as you see,i use it in register and all doing that it dose for user,
     you follow check you follow the person or not!'''
+   
    
     postcount=serializers.SerializerMethodField()
     youfollow=serializers.SerializerMethodField()
@@ -121,27 +128,26 @@ class UserProfileSerializer(serializers.ModelSerializer):
     
     
     def get_followercount(self,obj):
-        
         try:
-            count=ProfileFallow.objects.filter(to_user=obj).count()
+            count = ProfileFallow.objects.filter(to_user=obj).count()
             return count
         except ProfileFallow.DoesNotExist:
                 pass
             
     def get_followingcount(self,obj):
         try:
-            count=ProfileFallow.objects.filter(from_user=obj).count()
+            count = ProfileFallow.objects.filter(from_user=obj).count()
             return count
         except ProfileFallow.DoesNotExist:
                 pass
     
   
     def get_postcount(self,obj):
-        count=MyPost.objects.filter(author=obj).count()
+        count = MyPost.objects.filter(author=obj).count()
         return count
         
     def get_youfollow(self,obj):
-        if self.context['request'].user!=obj:
+        if self.context['request'].user != obj:
             try:
                 ProfileFallow.objects.get(from_user=self.context['request'].user,to_user=obj)
                 return True
