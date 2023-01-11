@@ -7,7 +7,6 @@ from .serializers import *
 from .permisions import *
 from .models import *
 from rest_framework.generics import RetrieveAPIView,UpdateAPIView,DestroyAPIView, CreateAPIView,RetrieveUpdateAPIView,ListAPIView,ListCreateAPIView,RetrieveUpdateDestroyAPIView
-from rest_framework.views import APIView
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 

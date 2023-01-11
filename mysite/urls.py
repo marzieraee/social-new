@@ -28,17 +28,6 @@ urlpatterns = [
     path('polls/', include('project.urls')),
 
     path('account/', include('login.urls')),
-    # path('dj-rest-auth/', include('dj_rest_auth.urls')) ,
-    # path('dj-rest-auth/', include('dj_rest_auth.urls')),
-    # path(
-    #     'dj-rest-auth/registration/account-confirm-email/<str:key>/',
-    #     ConfirmEmailView.as_view(),
-    # ),
-    # path('dj-rest-auth/registration/', include('dj_rest_auth.registration.urls')),
-    # path(
-    #     'dj-rest-auth/account-confirm-email/',
-    #     VerifyEmailView.as_view(),
-    #     name='account_email_verification_sent'
-    # ),
+   
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
